@@ -3,8 +3,72 @@
 Encontre licitações **abertas em Santa Catarina** que combinam com o que a sua empresa vende e
 entenda o edital em minutos, com uma IA que mostra a página de onde tirou cada informação.
 
-> 🚧 **Em construção.** Este README descreve apenas o que já existe no repositório.
+> 🚧 **Em construção.** Este README descreve só o que já existe. O plano completo está em
+> [docs/arquitetura.md](docs/arquitetura.md).
 
-## Regras de desenvolvimento
+## Por que este projeto
 
-Este projeto é desenvolvido com auxílio de IA, seguindo as regras de [AGENTS.md](AGENTS.md).
+Em 18/11/2026, o PNCP (Portal Nacional de Contratações Públicas) listava cerca de 2,7 mil
+contratações de órgãos de Santa Catarina com proposta aberta. Os editais costumam ser longos: o
+que usamos de teste tem 36 páginas. O Radar quer responder duas perguntas de uma pequena empresa:
+
+1. **Quais dessas licitações combinam com o que eu vendo?**
+2. **O que esse edital exige de mim, e onde isso está escrito?**
+
+## O que já funciona
+
+| Parte | Status |
+|---|---|
+| Repositório, regras de desenvolvimento e CI (lint, formatação, tipos, testes e build) | ✅ pronto |
+| Coletor: conversão das datas da API para o horário de Brasília | ✅ pronto |
+| Coletor: coleta diária das licitações abertas de SC | 📋 planejado |
+| Banco: Postgres com pgvector no Supabase | 📋 planejado |
+| Site: busca "O que sua empresa vende?" | 📋 planejado |
+| Site: análise do edital com IA, com citação da página | 📋 planejado |
+
+## Estrutura
+
+```
+radar-licitacoes/
+├─ coletor/   Python 3.14: busca os dados no PNCP e grava no banco
+├─ web/       Next.js 16: o site
+├─ docs/      arquitetura, notas sobre a API do PNCP e decisões técnicas (ADRs)
+└─ .github/   CI no GitHub Actions
+```
+
+## Como rodar
+
+Pré-requisitos: [Python 3.14](https://www.python.org/) com [uv](https://docs.astral.sh/uv/) e
+[Node.js 24](https://nodejs.org/).
+
+### Coletor
+
+```bash
+cd coletor
+uv sync               # cria o .venv e instala as versões travadas no uv.lock
+uv run pytest         # testes
+uv run ruff check .   # lint
+uv run mypy           # checagem de tipos
+```
+
+### Site
+
+```bash
+cd web
+npm ci                # instala as versões travadas no package-lock.json
+npm run dev           # http://localhost:3000
+```
+
+## Documentação
+
+- [Arquitetura](docs/arquitetura.md): como as partes se conectam, fluxos e modelo de dados.
+- [API do PNCP](docs/api-pncp.md): o que descobrimos testando a API (parâmetros, limites e
+  armadilhas).
+- [Decisões técnicas (ADRs)](docs/decisoes/README.md): o que foi decidido, as alternativas e o
+  porquê.
+
+## Desenvolvimento com IA
+
+Este projeto é desenvolvido com auxílio de IA (Claude Code), seguindo as regras de
+[AGENTS.md](AGENTS.md): plano antes de código, testes e CI desde o primeiro commit, segredos fora
+do Git e documentação atualizada junto com o código.
