@@ -57,3 +57,15 @@ importa este arquivo.
 
 - Só serviços gratuitos: Vercel Hobby, Supabase Free, GitHub Actions (repositório público) e
   Gemini no plano gratuito.
+
+## Verificações (as mesmas do CI)
+
+| Pasta | Comando | O que confere |
+|---|---|---|
+| `coletor/` | `uv run ruff check .` | lint |
+| `coletor/` | `uv run ruff format --check .` | formatação |
+| `coletor/` | `uv run mypy` | tipos (modo strict) |
+| `coletor/` | `uv run pytest` | testes |
+| `web/` | `npm run lint` | lint |
+| `web/` | `npm run typecheck` | tipos (gera os tipos das rotas e roda o `tsc`) |
+| `web/` | `npm run build` | build de produção |
