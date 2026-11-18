@@ -1,0 +1,26 @@
+# Segredos: nunca vão para o Git
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Node (o web/ também tem o próprio .gitignore, gerado pelo Next.js)
+node_modules/
+
+# Supabase CLI
+supabase/.temp/
+supabase/.branches/
+
+# Sistema operacional e editores
+.DS_Store
+Thumbs.db
+.idea/

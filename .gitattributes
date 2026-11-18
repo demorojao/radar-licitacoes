@@ -1,0 +1,7 @@
+# Fim de linha LF em todos os arquivos de texto, para Windows e Linux (CI) verem o mesmo conteúdo.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.ico binary
+*.pdf binary
