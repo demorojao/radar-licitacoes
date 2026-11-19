@@ -23,7 +23,8 @@ que usamos de teste tem 36 páginas. O Radar quer responder duas perguntas de um
 |---|---|
 | Repositório, regras de desenvolvimento e CI (lint, formatação, tipos, testes e build) | ✅ pronto |
 | Coletor: conversão das datas da API para o horário de Brasília | ✅ pronto |
-| Coletor: coleta diária das licitações abertas de SC | 📋 planejado |
+| Coletor: cliente da API do PNCP (paginação, nova tentativa e validação dos dados) | ✅ pronto |
+| Coletor: gravação no banco e coleta diária agendada | 📋 planejado |
 | Banco: Postgres com pgvector no Supabase | 📋 planejado |
 | Site: busca "O que sua empresa vende?" | 📋 planejado |
 | Site: análise do edital com IA, com citação da página | 📋 planejado |

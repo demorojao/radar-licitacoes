@@ -32,7 +32,7 @@ flowchart LR
 
 | Parte | O que faz | Status |
 |---|---|---|
-| Coletor (`coletor/`) | busca as licitações abertas de SC no PNCP, valida e grava no banco | 🚧 conversão de datas pronta; coleta 📋 |
+| Coletor (`coletor/`) | busca as licitações abertas de SC no PNCP, valida e grava no banco | 🚧 cliente da API e validação prontos; gravação e agendamento 📋 |
 | Banco | guarda licitações, itens, arquivos, análises e o log das coletas | 📋 |
 | Site (`web/`) | busca por significado, filtros, página do edital e análise com IA | 🚧 só o projeto criado |
 | CI (`.github/workflows/ci.yml`) | lint, formatação, tipos, testes e build a cada push | ✅ |
@@ -43,19 +43,29 @@ que criam e alteram as tabelas) são o contrato entre elas. Veja o
 
 ## Fluxos
 
-### 1. Coleta diária 📋
+### 1. Coleta diária 🚧
 
-1. O GitHub Actions dispara o coletor uma vez por dia
+1. 📋 O GitHub Actions dispara o coletor uma vez por dia
    ([ADR 0003](decisoes/0003-github-actions-como-agendador.md)).
-2. O coletor percorre as páginas de `/v1/contratacoes/proposta?uf=SC`, com até 50 registros por
-   página ([ADR 0002](decisoes/0002-somente-propostas-abertas-de-sc.md)). Em caso de erro ou de
-   limite da API, espera e tenta de novo.
-3. Cada contratação é validada (Pydantic), as datas são convertidas para o horário de Brasília e o
-   registro é gravado com **upsert** pelo `numeroControlePNCP`. Upsert é inserir se não existe e
-   atualizar se existe, então rodar duas vezes não duplica nada.
-4. Para cada contratação nova, o coletor busca os itens e a lista de arquivos e gera o embedding
+2. ✅ O coletor percorre as páginas de `/v1/contratacoes/proposta?uf=SC`, com 50 registros por
+   página e 3 s de pausa entre elas, porque a API tem limite de uso
+   ([ADR 0002](decisoes/0002-somente-propostas-abertas-de-sc.md),
+   [ADR 0005](decisoes/0005-respeitar-o-limite-de-uso-da-api.md)). Em limite de uso, erro
+   temporário do servidor ou falha de rede, espera 5, 10, 20, 40 e 80 s e tenta de novo. A
+   paginação termina na última página ou num HTTP 204.
+3. ✅ Cada contratação é validada separadamente (Pydantic): um registro sujo é contado e ignorado,
+   sem derrubar a coleta. Texto vazio vira nulo, as datas ganham o fuso de Brasília e os valores
+   ficam em `Decimal`. Um registro repetido entre páginas aparece uma vez só.
+4. 📋 O registro é gravado com **upsert** pelo `numeroControlePNCP`. Upsert é inserir se não existe
+   e atualizar se existe, então rodar duas vezes não duplica nada.
+5. 📋 Para cada contratação nova, o coletor busca os itens e a lista de arquivos e gera o embedding
    do objeto com o Gemini.
-5. O resumo da execução (início, fim, quantidades e erro) vai para a tabela `coletas`.
+6. 📋 O resumo da execução (início, fim, quantidades, registros inválidos e erro) vai para a
+   tabela `coletas`.
+
+O cliente da API fica em `coletor/src/radar_coletor/cliente.py` e os modelos em
+`coletor/src/radar_coletor/modelos.py`. Em 18/11/2026 o modelo validou as 2.704 contratações
+abertas de SC sem rejeitar nenhuma.
 
 ### 2. Busca "O que sua empresa vende?" 📋
 
