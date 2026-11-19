@@ -4,8 +4,9 @@ version = "0.1.0"
 description = "Coleta licitações abertas de SC na API do PNCP e grava no Postgres"
 requires-python = ">=3.14"
 dependencies = [
-    # Base de fusos horários: o Windows não traz uma para o Python (zoneinfo).
-    "tzdata>=2026.6",
+    "httpx>=0.28.1",     # cliente HTTP com timeout e MockTransport (testes sem rede)
+    "pydantic>=2.14.3",  # validação dos dados da API
+    "tzdata>=2026.6",    # base de fusos horários: o Windows não traz uma para o Python
 ]
 
 [build-system]
