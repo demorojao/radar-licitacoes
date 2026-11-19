@@ -1,0 +1,7 @@
+{
+  "message": "must be greater than or equal to 10",
+  "path": "/pncp-consulta/v1/contratacoes/proposta",
+  "timestamp": "2026-11-18T21:11:48.129-03:00",
+  "status": "400",
+  "error": "Bad Request"
+}
