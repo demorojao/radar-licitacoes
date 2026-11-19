@@ -1,5 +1,7 @@
 # Radar de Licitações SC
 
+[![CI](https://github.com/demorojao/radar-licitacoes/actions/workflows/ci.yml/badge.svg)](https://github.com/demorojao/radar-licitacoes/actions/workflows/ci.yml)
+
 Encontre licitações **abertas em Santa Catarina** que combinam com o que a sua empresa vende e
 entenda o edital em minutos, com uma IA que mostra a página de onde tirou cada informação.
 
@@ -72,3 +74,7 @@ npm run dev           # http://localhost:3000
 Este projeto é desenvolvido com auxílio de IA (Claude Code), seguindo as regras de
 [AGENTS.md](AGENTS.md): plano antes de código, testes e CI desde o primeiro commit, segredos fora
 do Git e documentação atualizada junto com o código.
+
+## Licença
+
+[MIT](LICENSE).
