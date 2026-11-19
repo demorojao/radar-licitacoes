@@ -20,6 +20,8 @@ importa este arquivo.
    Todo número vem com a data em que foi medido.
 7. **Entenda antes de aceitar.** Código gerado por IA só entra se quem mantém o projeto
    consegue explicar cada linha.
+8. **Meça antes de decidir.** Limites, formatos e volumes de sistemas externos vêm de testes com
+   a API e os dados reais, registrados com data em `docs/`, e não de suposições.
 
 ## Versões e dependências
 
