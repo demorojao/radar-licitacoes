@@ -4,6 +4,10 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 import { lerOpcoes, lerResultadoBusca, type OpcoesDeFiltro, type ResultadoBusca } from "./esquemas";
 import type { Filtros } from "./parametros";
+import { comTempoLimite } from "./tempo-limite";
+
+// Um banco que não responde em 8 s vira a página de erro, em vez de "Carregando…" sem fim.
+const TEMPO_LIMITE_MS = 8_000;
 
 // Só roda no servidor. A chave é a pública (publishable): ela só faz o que o RLS libera, que é
 // ler. Mesmo assim fica no servidor, porque o navegador não precisa dela.
@@ -15,7 +19,10 @@ function cliente(): SupabaseClient {
   if (!url || !chave) {
     throw new Error("SUPABASE_URL e SUPABASE_PUBLISHABLE_KEY precisam estar definidas");
   }
-  return createClient(url, chave, { auth: { persistSession: false } });
+  return createClient(url, chave, {
+    auth: { persistSession: false },
+    global: { fetch: comTempoLimite(fetch, TEMPO_LIMITE_MS) },
+  });
 }
 
 /** Licitações abertas que atendem aos filtros, 20 por página. */
