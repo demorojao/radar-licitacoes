@@ -100,6 +100,11 @@ Este projeto é desenvolvido com auxílio de IA (Claude Code), seguindo as regra
 [AGENTS.md](AGENTS.md): plano antes de código, testes e CI desde o primeiro commit, segredos fora
 do Git e documentação atualizada junto com o código.
 
+O [`.mcp.json`](.mcp.json) conecta o agente ao Supabase pelo
+[MCP oficial](https://supabase.com/docs/guides/getting-started/mcp) em **modo somente leitura**:
+ele consulta tabelas, logs e alertas, mas não altera nada. Mudanças no banco só entram por
+migration em `supabase/migrations/`.
+
 ## Licença
 
 [MIT](LICENSE).
