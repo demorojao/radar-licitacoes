@@ -32,8 +32,8 @@ flowchart LR
 
 | Parte | O que faz | Status |
 |---|---|---|
-| Coletor (`coletor/`) | busca as licitações abertas de SC no PNCP, valida e grava no banco | 🚧 cliente da API e validação prontos; gravação e agendamento 📋 |
-| Banco (`supabase/`) | guarda licitações, itens, arquivos, análises e o log das coletas | 🚧 tabelas `contratacoes` e `coletas` com RLS testadas no CI; ainda não aplicadas no Supabase |
+| Coletor (`coletor/`) | busca as licitações abertas de SC no PNCP, valida e grava no banco | 🚧 coleta diária em produção desde 22/11/2026; itens, arquivos e embeddings 📋 |
+| Banco (`supabase/`) | guarda licitações, itens, arquivos, análises e o log das coletas | 🚧 tabelas `contratacoes` e `coletas` com RLS, testadas no CI e aplicadas no Supabase em 22/11/2026 |
 | Site (`web/`) | busca por significado, filtros, página do edital e análise com IA | 🚧 só o projeto criado |
 | CI (`.github/workflows/ci.yml`) | lint, formatação, tipos, testes e build a cada push | ✅ |
 
@@ -45,10 +45,11 @@ que criam e alteram as tabelas) são o contrato entre elas. Veja o
 
 ### 1. Coleta diária 🚧
 
-1. 🚧 O GitHub Actions dispara o coletor todo dia às 6h de Brasília, ou à mão pelo botão "Run
+1. ✅ O GitHub Actions dispara o coletor todo dia às 6h de Brasília, ou à mão pelo botão "Run
    workflow" (`.github/workflows/coleta.yml`,
-   [ADR 0003](decisoes/0003-github-actions-como-agendador.md)). O workflow está pronto e espera
-   o secret `DATABASE_URL` e a migration aplicada no Supabase.
+   [ADR 0003](decisoes/0003-github-actions-como-agendador.md)). A URL do banco vem do secret
+   `DATABASE_URL`. A primeira execução, em 22/11/2026, leu 57 páginas e gravou 2.805
+   contratações em 4 min 25 s.
 2. ✅ O coletor percorre as páginas de `/v1/contratacoes/proposta?uf=SC`, com 50 registros por
    página e 3 s de pausa entre elas, porque a API tem limite de uso
    ([ADR 0002](decisoes/0002-somente-propostas-abertas-de-sc.md),

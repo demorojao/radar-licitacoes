@@ -99,6 +99,27 @@ Consequências para o código:
 - Texto vazio vira `None` na validação.
 - Valor estimado 0 não significa "de graça": a tela deve mostrar "valor não informado".
 
+### Primeira coleta em produção (22/11/2026)
+
+Medido no banco depois da primeira execução do workflow "Coleta diária":
+
+| Aspecto | Resultado |
+|---|---|
+| Páginas e duração | 57 páginas em 4 min 25 s, sem nenhum 429 que derrubasse a coleta |
+| Contratações | 2.805 válidas, 0 rejeitadas pela validação |
+| Municípios e modalidades | 255 municípios, 10 modalidades |
+| Prazo de encerramento | 1.931 em até 60 dias · 441 entre 60 dias e 1 ano · **433 depois de 1 ano** (431 são credenciamentos) |
+| Datas absurdas | **8 encerram no ano 2100 ou depois**, provável erro de digitação do órgão |
+| Valor estimado | 184 com valor 0; mediana de R$ 258.930,70 (sem os zeros); o maior é R$ 2.297.628.657,83 |
+
+Consequências para o site:
+
+- **Credenciamento** fica aberto por anos, porque o órgão aceita fornecedores continuamente.
+  Ordenada por "encerra em breve", a lista os deixa no fim; vale um filtro próprio.
+- Data de encerramento muito distante deve aparecer como suspeita, e não como prazo real.
+- Para resumir valores, a **mediana** é mais honesta que a soma: um único registro passa de
+  R$ 2,2 bilhões.
+
 ## Itens e arquivos de uma contratação
 
 Cada contratação é identificada pelo `numeroControlePNCP`, no formato

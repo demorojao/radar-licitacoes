@@ -25,9 +25,9 @@ que usamos de teste tem 36 páginas. O Radar quer responder duas perguntas de um
 | Coletor: conversão das datas da API para o horário de Brasília | ✅ pronto |
 | Coletor: cliente da API do PNCP (paginação, nova tentativa e validação dos dados) | ✅ pronto |
 | Coletor: gravação no banco com upsert (rodar duas vezes não duplica) | ✅ pronto |
-| Coletor: coleta diária agendada (workflow pronto; aguarda o banco de produção) | 🚧 em construção |
+| Coletor: coleta diária agendada no GitHub Actions (primeira coleta em 22/11/2026: 2.805 contratações, nenhuma rejeitada) | ✅ pronto |
 | Banco: tabelas de contratações e de coletas, com RLS (público só lê), testadas no CI | ✅ pronto |
-| Banco: aplicado no Supabase de produção | 📋 planejado |
+| Banco: aplicado no Supabase de produção | ✅ pronto |
 | Site: busca "O que sua empresa vende?" | 📋 planejado |
 | Site: análise do edital com IA, com citação da página | 📋 planejado |
 
