@@ -70,4 +70,5 @@ importa este arquivo.
 | `coletor/` | `uv run pytest` | testes (os de banco, marcados `integracao`, precisam de `TEST_DATABASE_URL` e rodam no CI) |
 | `web/` | `npm run lint` | lint |
 | `web/` | `npm run typecheck` | tipos (gera os tipos das rotas e roda o `tsc`) |
+| `web/` | `npm test` | testes (Vitest) |
 | `web/` | `npm run build` | build de produção |
