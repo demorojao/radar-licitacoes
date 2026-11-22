@@ -62,8 +62,10 @@ que criam e alteram as tabelas) são o contrato entre elas. Veja o
    original da API vai para a coluna `payload` (`coletor/src/radar_coletor/banco.py`).
 5. 📋 Para cada contratação nova, o coletor busca os itens e a lista de arquivos e gera o embedding
    do objeto com o Gemini.
-6. 📋 O resumo da execução (início, fim, quantidades, registros inválidos e erro) vai para a
-   tabela `coletas`.
+6. ✅ O resumo da execução (início, fim, quantidades, registros inválidos e erro) vai para a
+   tabela `coletas`. Uma falha também é registrada, e a coleta termina com código de erro. Uma
+   coleta sem nenhuma contratação válida conta como falha, porque indica problema na fonte.
+   O comando é `python -m radar_coletor` (`coletor/src/radar_coletor/coleta.py`).
 
 O cliente da API fica em `coletor/src/radar_coletor/cliente.py` e os modelos em
 `coletor/src/radar_coletor/modelos.py`. Em 18/11/2026 o modelo validou as 2.704 contratações

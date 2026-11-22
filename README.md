@@ -57,6 +57,27 @@ uv run ruff check .   # lint
 uv run mypy           # checagem de tipos
 ```
 
+Os testes de banco (marcados `integracao`) precisam de um Postgres de teste em
+`TEST_DATABASE_URL`. Sem ele, são pulados; no CI, rodam sempre.
+
+Para rodar uma coleta de verdade, copie `coletor/.env.example` para `coletor/.env`, preencha a
+`DATABASE_URL` e rode:
+
+```bash
+uv run --env-file .env python -m radar_coletor
+```
+
+A coleta leva alguns minutos, porque espera 3 s entre as páginas para respeitar o limite de uso
+da API ([ADR 0005](docs/decisoes/0005-respeitar-o-limite-de-uso-da-api.md)).
+
+### Banco
+
+As migrations ficam em `supabase/migrations/`. Para aplicar no Supabase:
+
+```bash
+npx supabase@3.2.0 db push --remote="<a mesma DATABASE_URL>"
+```
+
 ### Site
 
 ```bash
