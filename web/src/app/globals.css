@@ -1,26 +1,51 @@
 @import "tailwindcss";
 
+/* Radar de Licitações SC. Papel de repartição, tinta verde-escura e um vermelho reservado para
+   prazos que estão acabando. O vermelho só aparece quando significa urgência. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --papel: #f3f5f2;
+  --superficie: #ffffff;
+  --tinta: #16201b;
+  --apagado: #56625c;
+  --linha: #d2dad5;
+  --verde: #0b5d3b;
+  --verde-forte: #08472d;
+  --alerta: #b42318;
+  color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --papel: #0f1512;
+    --superficie: #161e1a;
+    --tinta: #e3eae6;
+    --apagado: #9aa8a1;
+    --linha: #2a3530;
+    --verde: #5cc08e;
+    --verde-forte: #7fd3a8;
+    --alerta: #f97066;
+    color-scheme: dark;
   }
 }
 
+@theme inline {
+  --color-papel: var(--papel);
+  --color-superficie: var(--superficie);
+  --color-tinta: var(--tinta);
+  --color-apagado: var(--apagado);
+  --color-linha: var(--linha);
+  --color-verde: var(--verde);
+  --color-verde-forte: var(--verde-forte);
+  --color-alerta: var(--alerta);
+  --font-sans: var(--font-public-sans);
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--papel);
+  color: var(--tinta);
+}
+
+:focus-visible {
+  outline: 3px solid var(--verde);
+  outline-offset: 2px;
 }
