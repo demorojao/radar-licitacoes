@@ -34,7 +34,7 @@ flowchart LR
 |---|---|---|
 | Coletor (`coletor/`) | busca as licitações abertas de SC no PNCP, valida e grava no banco | 🚧 coleta diária em produção desde 22/11/2026; itens, arquivos e embeddings 📋 |
 | Banco (`supabase/`) | guarda licitações, itens, arquivos, análises e o log das coletas | 🚧 tabelas `contratacoes` e `coletas` com RLS, testadas no CI e aplicadas no Supabase em 22/11/2026 |
-| Site (`web/`) | busca por significado, filtros, página do edital e análise com IA | 🚧 só o projeto criado |
+| Site (`web/`) | busca, filtros, página do edital e análise com IA | 🚧 lista com filtros e busca por palavras prontas; busca por significado, página do edital e análise com IA 📋 |
 | CI (`.github/workflows/ci.yml`) | lint, formatação, tipos, testes e build a cada push | ✅ |
 
 As duas partes, coletor e site, só conversam pelo banco. As migrations (arquivos SQL versionados
@@ -76,7 +76,7 @@ abertas de SC sem rejeitar nenhuma.
 
 ### 2. Busca "O que sua empresa vende?" 🚧
 
-1. 🚧 **Busca por palavras.** A coluna `busca` (`tsvector`) de `contratacoes` é calculada pelo
+1. ✅ **Busca por palavras.** A coluna `busca` (`tsvector`) de `contratacoes` é calculada pelo
    próprio Postgres a partir do objeto (peso maior) e do nome do órgão, com uma configuração em
    português que ignora acentos e plurais: `normalizar_para_busca` tira os acentos e troca a
    terminação do plural pela do singular ("contratações" → "contratacao"), e depois vem o radical
@@ -85,7 +85,11 @@ abertas de SC sem rejeitar nenhuma.
    abertas (situação "Divulgada no PNCP" e prazo futuro), ordenadas pela relevância ou pelo prazo,
    20 por página, com o total. `opcoes_de_filtro()` monta os seletores. As duas rodam com as
    permissões de quem chama, então o RLS vale
-   ([ADR 0008](decisoes/0008-busca-numa-funcao-sql.md)). O site ainda não usa a função.
+   ([ADR 0008](decisoes/0008-busca-numa-funcao-sql.md)). O servidor do site chama as duas
+   com o `supabase-js` e a chave pública (`web/src/lib/banco.ts`), valida a resposta com Zod e
+   corta o pedido que passar de 8 s. Os filtros vêm da URL, validados com Zod
+   (`web/src/lib/parametros.ts`), e a página (`web/src/app/page.tsx`) entrega o título e a busca
+   como HTML estático e a lista por streaming (*Partial Prerender*).
 2. 📋 O servidor do site gera o embedding do texto digitado. A chave do Gemini nunca vai para o
    navegador.
 3. 📋 O Postgres combina a busca por significado (pgvector) com a busca por palavras. Isso se

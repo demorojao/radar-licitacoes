@@ -1,6 +1,6 @@
 # Plano: primeira tela (lista, filtros e busca por palavras) e deploy na Vercel
 
-> Status: ✅ aprovado pelo João em 22/11/2026 · implementação 📋
+> Status: ✅ aprovado pelo João e implementado em 22/11/2026 (branch `tela`)
 
 ## Por que
 

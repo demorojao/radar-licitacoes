@@ -28,7 +28,9 @@ que usamos de teste tem 36 páginas. O Radar quer responder duas perguntas de um
 | Coletor: coleta diária agendada no GitHub Actions (primeira coleta em 22/11/2026: 2.805 contratações, nenhuma rejeitada) | ✅ pronto |
 | Banco: tabelas de contratações e de coletas, com RLS (público só lê), testadas no CI | ✅ pronto |
 | Banco: aplicado no Supabase de produção | ✅ pronto |
-| Site: busca "O que sua empresa vende?" | 📋 planejado |
+| Site: lista das licitações abertas com filtros por município, modalidade e prazo | ✅ pronto |
+| Site: busca "O que sua empresa vende?" por palavras, ignorando acentos e plurais | ✅ pronto |
+| Site: busca por significado (com IA), que encontra sinônimos | 📋 planejado |
 | Site: análise do edital com IA, com citação da página | 📋 planejado |
 
 ## Estrutura
