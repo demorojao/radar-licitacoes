@@ -160,3 +160,22 @@ def test_opcoes_de_filtro_contam_so_abertas(conexao: Conexao) -> None:
         ("modalidade", "6", "Pregão - Eletrônico", 2),
         ("municipio", JOINVILLE, "Joinville", 2),
     ]
+
+
+@pytest.mark.parametrize(
+    ("no_banco", "buscado"),
+    [
+        ("Contratação de empresa de limpeza", "contratações"),
+        ("CONTRATAÇÕES DE SERVIÇOS GERAIS", "contratacao"),
+        ("Aquisição de copos descartáveis", "descartavel"),
+        ("Compra de material de escritório", "materiais"),
+        ("Aquisição de itens de informática", "item"),
+        ("Fornecimento de lençóis hospitalares", "lencol"),
+    ],
+)
+def test_plural_e_singular_com_acento_se_encontram(
+    conexao: Conexao, no_banco: str, buscado: str
+) -> None:
+    chave = nova(conexao, 1, objeto=no_banco)
+
+    assert chaves(buscar(conexao, p_texto=buscado)) == [chave]

@@ -78,7 +78,9 @@ abertas de SC sem rejeitar nenhuma.
 
 1. 🚧 **Busca por palavras.** A coluna `busca` (`tsvector`) de `contratacoes` é calculada pelo
    próprio Postgres a partir do objeto (peso maior) e do nome do órgão, com uma configuração em
-   português que ignora acentos e plurais (`unaccent` + radical). A função
+   português que ignora acentos e plurais: `normalizar_para_busca` tira os acentos e troca a
+   terminação do plural pela do singular ("contratações" → "contratacao"), e depois vem o radical
+   do português. A função
    `buscar_contratacoes(texto, município, modalidade, prazo, página)` devolve só licitações
    abertas (situação "Divulgada no PNCP" e prazo futuro), ordenadas pela relevância ou pelo prazo,
    20 por página, com o total. `opcoes_de_filtro()` monta os seletores. As duas rodam com as

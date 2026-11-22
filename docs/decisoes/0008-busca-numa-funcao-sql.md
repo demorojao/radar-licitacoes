@@ -22,6 +22,10 @@ as duas com o `@supabase/supabase-js` e a **chave pública** (*publishable*) do 
   lugar de uma tabela ou função.
 - A busca por palavras usa uma coluna `tsvector` gerada pelo Postgres e uma configuração de busca
   em português sem acentos (`unaccent` + radical em português).
+- Antes do radical, `normalizar_para_busca` tira os acentos e troca a terminação do plural pela do
+  singular ("contratações" → "contratacao", "descartáveis" → "descartavel", "itens" → "item"). Sem
+  isso, o radical do português, que reconhece "-ção/-ções" pela forma com acento, separava singular
+  e plural: em 22/11/2026, "contratação" achava 1.217 licitações e "contratações" só 10.
 
 ## Alternativas consideradas
 
