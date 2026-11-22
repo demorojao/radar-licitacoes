@@ -105,6 +105,8 @@ async function Busca({ searchParams }: Pick<PageProps<"/">, "searchParams">) {
 }
 
 async function UltimaColeta() {
+  // Dado do banco a cada visita: sem connection(), o Next tentaria lê-lo no build.
+  await connection();
   const terminadaEm = await ultimaColeta();
   if (!terminadaEm) return <p>Ainda não houve coleta.</p>;
   const [data, hora] = formatarDataHora(terminadaEm).split(" ");
