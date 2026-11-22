@@ -5,6 +5,9 @@
 Encontre licitações **abertas em Santa Catarina** que combinam com o que a sua empresa vende e
 entenda o edital em minutos, com uma IA que mostra a página de onde tirou cada informação.
 
+**Site no ar:** https://radar-licitacoes-sc.vercel.app (em 22/11/2026: 2.756 licitações abertas;
+a busca "contratações" encontra 1.225).
+
 > 🚧 **Em construção.** Este README descreve só o que já existe. O plano completo está em
 > [docs/arquitetura.md](docs/arquitetura.md).
 
