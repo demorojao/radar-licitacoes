@@ -56,8 +56,10 @@ que criam e alteram as tabelas) são o contrato entre elas. Veja o
 3. ✅ Cada contratação é validada separadamente (Pydantic): um registro sujo é contado e ignorado,
    sem derrubar a coleta. Texto vazio vira nulo, as datas ganham o fuso de Brasília e os valores
    ficam em `Decimal`. Um registro repetido entre páginas aparece uma vez só.
-4. 📋 O registro é gravado com **upsert** pelo `numeroControlePNCP`. Upsert é inserir se não existe
-   e atualizar se existe, então rodar duas vezes não duplica nada.
+4. ✅ As contratações são gravadas com **upsert** pelo `numeroControlePNCP`, todas numa transação
+   só. Upsert é inserir se não existe e atualizar se existe, então rodar duas vezes não duplica
+   nada. O mesmo comando conta quantas eram novas e quantas foram atualizadas, e a resposta
+   original da API vai para a coluna `payload` (`coletor/src/radar_coletor/banco.py`).
 5. 📋 Para cada contratação nova, o coletor busca os itens e a lista de arquivos e gera o embedding
    do objeto com o Gemini.
 6. 📋 O resumo da execução (início, fim, quantidades, registros inválidos e erro) vai para a

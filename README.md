@@ -24,7 +24,8 @@ que usamos de teste tem 36 páginas. O Radar quer responder duas perguntas de um
 | Repositório, regras de desenvolvimento e CI (lint, formatação, tipos, testes e build) | ✅ pronto |
 | Coletor: conversão das datas da API para o horário de Brasília | ✅ pronto |
 | Coletor: cliente da API do PNCP (paginação, nova tentativa e validação dos dados) | ✅ pronto |
-| Coletor: gravação no banco e coleta diária agendada | 📋 planejado |
+| Coletor: gravação no banco com upsert (rodar duas vezes não duplica) | ✅ pronto |
+| Coletor: coleta diária agendada | 📋 planejado |
 | Banco: tabelas de contratações e de coletas, com RLS (público só lê), testadas no CI | ✅ pronto |
 | Banco: aplicado no Supabase de produção | 📋 planejado |
 | Site: busca "O que sua empresa vende?" | 📋 planejado |

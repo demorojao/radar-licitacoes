@@ -198,6 +198,17 @@ def test_registro_repetido_entre_paginas_aparece_uma_vez_so() -> None:
     assert len(resultado.contratacoes) == 5
 
 
+def test_guarda_a_resposta_original_de_cada_contratacao() -> None:
+    manipulador, _ = em_sequencia(ok(pagina(REGISTROS_REAIS[:2], numero=1, restantes=0)))
+    cliente, _ = criar(manipulador)
+
+    resultado = cliente.listar_propostas_abertas()
+
+    chave = REGISTROS_REAIS[0]["numeroControlePNCP"]
+    assert set(resultado.brutos) == {c.numero_controle_pncp for c in resultado.contratacoes}
+    assert resultado.brutos[chave]["objetoCompra"] == REGISTROS_REAIS[0]["objetoCompra"]
+
+
 def test_registro_invalido_nao_derruba_a_coleta() -> None:
     sujo = {k: v for k, v in REGISTROS_REAIS[0].items() if k != "objetoCompra"}
     manipulador, _ = em_sequencia(ok(pagina([sujo, *REGISTROS_REAIS[1:]], numero=1, restantes=0)))

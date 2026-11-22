@@ -48,6 +48,8 @@ class ResultadoListagem:
     contratacoes: list[Contratacao]
     invalidos: list[RegistroInvalido]
     paginas_lidas: int
+    # Resposta original de cada contratação válida, pela chave, para guardar no banco.
+    brutos: dict[str, dict[str, Any]]
 
 
 def criar_cliente_http(
@@ -138,6 +140,7 @@ class ClientePNCP:
     ) -> ResultadoListagem:
         """Percorre todas as páginas e valida cada registro separadamente."""
         por_chave: dict[str, Contratacao] = {}
+        brutos: dict[str, dict[str, Any]] = {}
         invalidos: list[RegistroInvalido] = []
         paginas_lidas = 0
 
@@ -161,6 +164,7 @@ class ClientePNCP:
                     continue
                 # A lista pode mudar enquanto paginamos: a chave evita duplicar registros.
                 por_chave[contratacao.numero_controle_pncp] = contratacao
+                brutos[contratacao.numero_controle_pncp] = bruto
 
             if pagina.paginas_restantes <= 0:
                 break
@@ -168,7 +172,7 @@ class ClientePNCP:
 
         if invalidos:
             log.warning("PNCP: %d registro(s) inválido(s) ignorado(s)", len(invalidos))
-        return ResultadoListagem(list(por_chave.values()), invalidos, paginas_lidas)
+        return ResultadoListagem(list(por_chave.values()), invalidos, paginas_lidas, brutos)
 
     def _get(self, caminho: str, params: dict[str, str | int]) -> httpx.Response:
         motivo = ""
