@@ -1,0 +1,43 @@
+name: Coleta diária
+
+on:
+  schedule:
+    # 09:00 UTC = 06:00 em Brasília. O GitHub pode atrasar execuções agendadas em horários de pico.
+    - cron: "0 9 * * *"
+  # Botão "Run workflow" na aba Actions, para rodar à mão.
+  workflow_dispatch:
+
+# Nunca duas coletas ao mesmo tempo; uma nova espera a anterior terminar.
+concurrency:
+  group: coleta
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  coletar:
+    name: Coletar licitações abertas de SC
+    runs-on: ubuntu-latest
+    # Em 18/11/2026, a coleta completa leva alguns minutos (55 páginas, 3 s entre elas).
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: coletor
+    steps:
+      - uses: actions/checkout@v7
+
+      # Action de terceiros fixada pelo hash do commit (uma tag pode ser movida; o hash não).
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          working-directory: coletor
+          enable-cache: true
+
+      - name: Instala só as dependências de produção, como no uv.lock
+        run: uv sync --locked --no-dev
+
+      - name: Coleta e grava no banco
+        run: uv run --no-dev python -m radar_coletor
+        env:
+          # Secret do repositório: Settings → Secrets and variables → Actions → DATABASE_URL.
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}

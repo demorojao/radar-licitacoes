@@ -45,8 +45,10 @@ que criam e alteram as tabelas) são o contrato entre elas. Veja o
 
 ### 1. Coleta diária 🚧
 
-1. 📋 O GitHub Actions dispara o coletor uma vez por dia
-   ([ADR 0003](decisoes/0003-github-actions-como-agendador.md)).
+1. 🚧 O GitHub Actions dispara o coletor todo dia às 6h de Brasília, ou à mão pelo botão "Run
+   workflow" (`.github/workflows/coleta.yml`,
+   [ADR 0003](decisoes/0003-github-actions-como-agendador.md)). O workflow está pronto e espera
+   o secret `DATABASE_URL` e a migration aplicada no Supabase.
 2. ✅ O coletor percorre as páginas de `/v1/contratacoes/proposta?uf=SC`, com 50 registros por
    página e 3 s de pausa entre elas, porque a API tem limite de uso
    ([ADR 0002](decisoes/0002-somente-propostas-abertas-de-sc.md),
