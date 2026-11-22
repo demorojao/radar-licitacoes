@@ -80,9 +80,13 @@ npx supabase@3.2.0 db push --remote="<a mesma DATABASE_URL>"
 
 ### Site
 
+Copie `web/.env.example` para `web/.env.local` e preencha a chave pública do Supabase. Ela só
+permite ler, porque o RLS barra qualquer escrita. A senha do banco nunca vai para o site.
+
 ```bash
 cd web
 npm ci                # instala as versões travadas no package-lock.json
+npm test              # testes (Vitest)
 npm run dev           # http://localhost:3000
 ```
 
