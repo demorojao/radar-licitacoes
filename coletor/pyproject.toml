@@ -5,6 +5,7 @@ description = "Coleta licitações abertas de SC na API do PNCP e grava no Postg
 requires-python = ">=3.14"
 dependencies = [
     "httpx>=0.28.1",     # cliente HTTP com timeout e MockTransport (testes sem rede)
+    "psycopg[binary]>=3.3.9",  # conexão com o Postgres (SQL direto, ver ADR 0006)
     "pydantic>=2.14.3",  # validação dos dados da API
     "tzdata>=2026.6",    # base de fusos horários: o Windows não traz uma para o Python
 ]
@@ -34,3 +35,7 @@ files = ["src", "tests"]
 
 [tool.pytest]
 testpaths = ["tests"]
+strict_markers = true
+markers = [
+    "integracao: precisa de um Postgres de teste em TEST_DATABASE_URL (roda no CI)",
+]

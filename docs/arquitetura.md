@@ -33,7 +33,7 @@ flowchart LR
 | Parte | O que faz | Status |
 |---|---|---|
 | Coletor (`coletor/`) | busca as licitações abertas de SC no PNCP, valida e grava no banco | 🚧 cliente da API e validação prontos; gravação e agendamento 📋 |
-| Banco | guarda licitações, itens, arquivos, análises e o log das coletas | 📋 |
+| Banco (`supabase/`) | guarda licitações, itens, arquivos, análises e o log das coletas | 🚧 tabelas `contratacoes` e `coletas` com RLS testadas no CI; ainda não aplicadas no Supabase |
 | Site (`web/`) | busca por significado, filtros, página do edital e análise com IA | 🚧 só o projeto criado |
 | CI (`.github/workflows/ci.yml`) | lint, formatação, tipos, testes e build a cada push | ✅ |
 
@@ -85,19 +85,30 @@ abertas de SC sem rejeitar nenhuma.
    como dado, nunca como instrução (proteção contra prompt injection).
 5. Um limite por IP e um teto diário protegem a cota gratuita do Gemini.
 
-## Modelo de dados 📋
+## Modelo de dados
 
-| Tabela | Chave | Conteúdo |
-|---|---|---|
-| `contratacoes` | `numero_controle_pncp` | órgão, município, modalidade, objeto, valor estimado (`numeric`), datas (`timestamptz`), link de origem, resposta original da API (`jsonb`), coluna de busca por palavras (`tsvector`) e embedding (`vector`) |
-| `itens` | `(numero_controle_pncp, numero_item)` | descrição, quantidade, unidade, valores e benefício para ME/EPP |
-| `arquivos` | `(numero_controle_pncp, sequencial_documento)` | título, tipo e URL |
-| `analises` | `numero_controle_pncp` | JSON validado da análise, modelo usado e data |
-| `coletas` | `id` | início, fim, status, quantidades e erro de cada execução |
+As tabelas são criadas pelas migrations em `supabase/migrations/` e testadas no CI contra um
+Postgres 17 descartável ([ADR 0007](decisoes/0007-postgres-comum-nos-testes-de-banco.md)).
 
-## Segurança 📋
+| Tabela | Chave | Conteúdo | Status |
+|---|---|---|---|
+| `contratacoes` | `numero_controle_pncp` | órgão, município, modalidade, situação, objeto, valores (`numeric(18,2)`), datas (`timestamptz`), link de origem, resposta original da API (`payload jsonb`), primeira e última coleta | ✅ migration |
+| `coletas` | `id` | início, fim, status, páginas, novas, atualizadas, registros inválidos (`jsonb`) e erro de cada execução | ✅ migration |
+| `itens` | `(numero_controle_pncp, numero_item)` | descrição, quantidade, unidade, valores e benefício para ME/EPP | 📋 |
+| `arquivos` | `(numero_controle_pncp, sequencial_documento)` | título, tipo e URL | 📋 |
+| `analises` | `numero_controle_pncp` | JSON validado da análise, modelo usado e data | 📋 |
 
-- RLS em todas as tabelas: o público só lê. Só o coletor e o servidor do site escrevem.
+A busca por palavras (`tsvector`) e o embedding (`vector`) entram na tabela `contratacoes` no passo
+da busca. Uma contratação que sai da lista de abertas não é apagada: só deixa de ser atualizada.
+
+## Segurança
+
+- ✅ RLS em `contratacoes` e `coletas`: o público (`anon`, `authenticated`) só lê, e não há
+  política de escrita. Os testes conferem que, como `anon`, ler funciona e gravar, alterar ou
+  apagar é barrado.
+- ✅ O coletor grava como dono das tabelas, com SQL direto pelo psycopg
+  ([ADR 0006](decisoes/0006-sql-direto-com-psycopg.md)).
+- 📋 RLS nas tabelas futuras: o público só lê. Só o coletor e o servidor do site escrevem.
 - Chaves secretas só no servidor (secrets do GitHub Actions e variáveis de ambiente da Vercel).
 - Validação de toda entrada (Pydantic no coletor, Zod no site).
 - Cache, limite por IP e teto diário na rota de IA.

@@ -25,7 +25,8 @@ que usamos de teste tem 36 páginas. O Radar quer responder duas perguntas de um
 | Coletor: conversão das datas da API para o horário de Brasília | ✅ pronto |
 | Coletor: cliente da API do PNCP (paginação, nova tentativa e validação dos dados) | ✅ pronto |
 | Coletor: gravação no banco e coleta diária agendada | 📋 planejado |
-| Banco: Postgres com pgvector no Supabase | 📋 planejado |
+| Banco: tabelas de contratações e de coletas, com RLS (público só lê), testadas no CI | ✅ pronto |
+| Banco: aplicado no Supabase de produção | 📋 planejado |
 | Site: busca "O que sua empresa vende?" | 📋 planejado |
 | Site: análise do edital com IA, com citação da página | 📋 planejado |
 
@@ -34,6 +35,7 @@ que usamos de teste tem 36 páginas. O Radar quer responder duas perguntas de um
 ```
 radar-licitacoes/
 ├─ coletor/   Python 3.14: busca os dados no PNCP e grava no banco
+├─ supabase/  migrations do banco (tabelas e RLS)
 ├─ web/       Next.js 16: o site
 ├─ docs/      arquitetura, notas sobre a API do PNCP e decisões técnicas (ADRs)
 └─ .github/   CI no GitHub Actions

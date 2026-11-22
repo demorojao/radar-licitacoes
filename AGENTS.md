@@ -67,7 +67,7 @@ importa este arquivo.
 | `coletor/` | `uv run ruff check .` | lint |
 | `coletor/` | `uv run ruff format --check .` | formatação |
 | `coletor/` | `uv run mypy` | tipos (modo strict) |
-| `coletor/` | `uv run pytest` | testes |
+| `coletor/` | `uv run pytest` | testes (os de banco, marcados `integracao`, precisam de `TEST_DATABASE_URL` e rodam no CI) |
 | `web/` | `npm run lint` | lint |
 | `web/` | `npm run typecheck` | tipos (gera os tipos das rotas e roda o `tsc`) |
 | `web/` | `npm run build` | build de produção |

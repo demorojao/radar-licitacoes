@@ -13,6 +13,8 @@ Um ADR não é apagado quando a decisão muda. Escreve-se um novo, que substitui
 | [0003](0003-github-actions-como-agendador.md) | GitHub Actions como agendador da coleta | aceita |
 | [0004](0004-uv-no-projeto-python.md) | uv para gerenciar o projeto Python | aceita |
 | [0005](0005-respeitar-o-limite-de-uso-da-api.md) | Respeitar o limite de uso da API do PNCP | aceita |
+| [0006](0006-sql-direto-com-psycopg.md) | O coletor grava no Postgres com SQL direto (psycopg) | aceita |
+| [0007](0007-postgres-comum-nos-testes-de-banco.md) | Postgres comum, imitando o Supabase, nos testes de banco | aceita |
 
 ## Modelo
 
