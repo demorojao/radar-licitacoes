@@ -15,6 +15,7 @@ Um ADR não é apagado quando a decisão muda. Escreve-se um novo, que substitui
 | [0005](0005-respeitar-o-limite-de-uso-da-api.md) | Respeitar o limite de uso da API do PNCP | aceita |
 | [0006](0006-sql-direto-com-psycopg.md) | O coletor grava no Postgres com SQL direto (psycopg) | aceita |
 | [0007](0007-postgres-comum-nos-testes-de-banco.md) | Postgres comum, imitando o Supabase, nos testes de banco | aceita |
+| [0008](0008-busca-numa-funcao-sql.md) | A busca do site é uma função SQL chamada com a chave pública | aceita |
 
 ## Modelo
 

@@ -74,13 +74,21 @@ O cliente da API fica em `coletor/src/radar_coletor/cliente.py` e os modelos em
 `coletor/src/radar_coletor/modelos.py`. Em 18/11/2026 o modelo validou as 2.704 contratações
 abertas de SC sem rejeitar nenhuma.
 
-### 2. Busca "O que sua empresa vende?" 📋
+### 2. Busca "O que sua empresa vende?" 🚧
 
-1. O servidor do site gera o embedding do texto digitado. A chave do Gemini nunca vai para o
+1. 🚧 **Busca por palavras.** A coluna `busca` (`tsvector`) de `contratacoes` é calculada pelo
+   próprio Postgres a partir do objeto (peso maior) e do nome do órgão, com uma configuração em
+   português que ignora acentos e plurais (`unaccent` + radical). A função
+   `buscar_contratacoes(texto, município, modalidade, prazo, página)` devolve só licitações
+   abertas (situação "Divulgada no PNCP" e prazo futuro), ordenadas pela relevância ou pelo prazo,
+   20 por página, com o total. `opcoes_de_filtro()` monta os seletores. As duas rodam com as
+   permissões de quem chama, então o RLS vale
+   ([ADR 0008](decisoes/0008-busca-numa-funcao-sql.md)). O site ainda não usa a função.
+2. 📋 O servidor do site gera o embedding do texto digitado. A chave do Gemini nunca vai para o
    navegador.
-2. O Postgres combina a busca por significado (pgvector) com a busca por palavras (full-text em
-   português). Isso se chama **busca híbrida**.
-3. Filtros: município, valor, prazo e exclusividade para micro e pequenas empresas.
+3. 📋 O Postgres combina a busca por significado (pgvector) com a busca por palavras. Isso se
+   chama **busca híbrida**, e só a função muda: a tela continua igual.
+4. 📋 Filtros futuros: valor e exclusividade para micro e pequenas empresas.
 
 ### 3. Análise do edital com IA 📋
 
@@ -105,8 +113,8 @@ Postgres 17 descartável ([ADR 0007](decisoes/0007-postgres-comum-nos-testes-de-
 | `arquivos` | `(numero_controle_pncp, sequencial_documento)` | título, tipo e URL | 📋 |
 | `analises` | `numero_controle_pncp` | JSON validado da análise, modelo usado e data | 📋 |
 
-A busca por palavras (`tsvector`) e o embedding (`vector`) entram na tabela `contratacoes` no passo
-da busca. Uma contratação que sai da lista de abertas não é apagada: só deixa de ser atualizada.
+A coluna `busca` (`tsvector`, gerada pelo banco) já existe em `contratacoes`. O embedding
+(`vector`) entra no passo da busca por significado. Uma contratação que sai da lista de abertas não é apagada: só deixa de ser atualizada.
 
 ## Segurança
 

@@ -16,3 +16,7 @@ $$;
 grant usage on schema public to anon, authenticated;
 alter default privileges in schema public grant all on tables to anon, authenticated;
 alter default privileges in schema public grant all on sequences to anon, authenticated;
+
+-- No Supabase, as extensões ficam no schema "extensions", que anon e authenticated podem usar.
+create schema if not exists extensions;
+grant usage on schema extensions to anon, authenticated;
