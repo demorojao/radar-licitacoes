@@ -1,127 +1,167 @@
-import Link from "next/link";
 import { connection } from "next/server";
 import { Suspense } from "react";
 
+import { Cabecalho } from "@/componentes/Cabecalho";
+import { Calendario } from "@/componentes/Calendario";
+import { Exemplos } from "@/componentes/Exemplos";
 import { FormularioDeBusca } from "@/componentes/FormularioDeBusca";
 import { ItemDeLicitacao } from "@/componentes/ItemDeLicitacao";
 import { Paginacao } from "@/componentes/Paginacao";
-import { buscarContratacoes, opcoesDeFiltro, ultimaColeta } from "@/lib/banco";
+import { ResumoDosFiltros } from "@/componentes/ResumoDosFiltros";
+import { Seletores } from "@/componentes/Seletores";
+import {
+  buscarContratacoes,
+  encerramentosPorDia,
+  opcoesDeFiltro,
+  ultimaColeta,
+} from "@/lib/banco";
+import { montarMes } from "@/lib/calendario";
 import { formatarDataHora, hojeEmBrasilia } from "@/lib/formatacao";
 import { lerFiltros, linkDaPagina } from "@/lib/parametros";
 
 const REPOSITORIO = "https://github.com/demorojao/radar-licitacoes";
+const LARGURA = "mx-auto w-full max-w-6xl px-4 sm:px-6";
 
-// O título e o rodapé fazem parte do esqueleto estático. O que depende da URL e do banco chega
-// por streaming dentro de <Suspense>, como pede o Cache Components do Next 16.
+// A barra do topo e o rodapé fazem parte do esqueleto estático. O que depende da URL e do banco
+// chega por streaming dentro de <Suspense>, como pede o Cache Components do Next 16.
 export default function Pagina({ searchParams }: PageProps<"/">) {
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-4 sm:px-6">
-      <header className="pt-10 pb-8 sm:pt-16 sm:pb-10">
-        <h1 className="text-4xl font-extrabold tracking-tight sm:text-6xl">
-          Radar de Licitações SC
-        </h1>
-        <p className="mt-3 max-w-2xl text-lg text-apagado">
-          Licitações abertas em Santa Catarina, atualizadas todo dia a partir do Portal Nacional de
-          Contratações Públicas.
-        </p>
-      </header>
-
-      <main className="flex-1">
-        <Suspense fallback={<Carregando />}>
-          <Busca searchParams={searchParams} />
-        </Suspense>
-      </main>
-
-      <footer className="mt-12 grid gap-1 border-t border-linha py-8 text-sm text-apagado">
-        <Suspense fallback={null}>
-          <UltimaColeta />
-        </Suspense>
-        <p>
-          Projeto de portfólio com código aberto.{" "}
-          <a
-            href={REPOSITORIO}
-            className="font-semibold text-verde underline underline-offset-4 hover:text-verde-forte"
-          >
-            Ver o código no GitHub
-          </a>
-        </p>
+    <div className="flex flex-1 flex-col">
+      <Cabecalho
+        numeros={
+          <Suspense fallback={null}>
+            <NumerosVivos />
+          </Suspense>
+        }
+      />
+      <Suspense fallback={<Carregando />}>
+        <Conteudo searchParams={searchParams} />
+      </Suspense>
+      <footer className="mt-auto border-t border-linha">
+        <div className={`${LARGURA} grid gap-1 py-8 text-sm text-apagado`}>
+          <p>Dados públicos do Portal Nacional de Contratações Públicas (PNCP).</p>
+          <p>
+            Projeto de portfólio com código aberto.{" "}
+            <a
+              href={REPOSITORIO}
+              className="font-semibold text-verde underline underline-offset-4 hover:text-verde-forte"
+            >
+              Ver o código no GitHub
+            </a>
+          </p>
+        </div>
       </footer>
     </div>
   );
 }
 
-async function Busca({ searchParams }: Pick<PageProps<"/">, "searchParams">) {
+async function Conteudo({ searchParams }: Pick<PageProps<"/">, "searchParams">) {
   const parametros = await searchParams;
   // A hora atual muda a cada visita: connection() avisa o Next para não usá-la no pré-render.
   await connection();
   const agora = new Date();
-  const filtros = lerFiltros(parametros, hojeEmBrasilia(agora));
-  const [resultado, opcoes] = await Promise.all([buscarContratacoes(filtros), opcoesDeFiltro()]);
-  const temFiltro = linkDaPagina(filtros, 1) !== "/";
+  const hoje = hojeEmBrasilia(agora);
+  const filtros = lerFiltros(parametros, hoje);
+  // O mês do calendário: o pedido na URL, o da data escolhida ou o atual, nunca antes do atual.
+  const mes = [filtros.mes ?? filtros.aPartir?.slice(0, 7) ?? hoje.slice(0, 7), hoje.slice(0, 7)]
+    .sort()
+    .at(-1)!;
+
+  const [resultado, opcoes, contagens] = await Promise.all([
+    buscarContratacoes(filtros),
+    opcoesDeFiltro(),
+    encerramentosPorDia(filtros, mes),
+  ]);
 
   return (
     <>
-      {/* A key recria o formulário quando a URL muda, para os campos mostrarem a busca atual. */}
-      <FormularioDeBusca key={linkDaPagina(filtros, 1)} filtros={filtros} opcoes={opcoes} />
-
-      <div className="mt-10 flex flex-wrap items-baseline justify-between gap-2 pb-4">
-        <p aria-live="polite" className="text-lg font-semibold">
-          {resultado.total === 1
-            ? "1 licitação aberta encontrada"
-            : `${resultado.total.toLocaleString("pt-BR")} licitações abertas encontradas`}
-        </p>
-        {temFiltro && (
-          <Link
-            href="/"
-            className="font-semibold text-verde underline underline-offset-4 hover:text-verde-forte"
-          >
-            Limpar busca e filtros
-          </Link>
-        )}
+      <div className="bg-verde-profundo text-sobre-faixa">
+        <div className={LARGURA}>
+          {/* A key recria o formulário quando a URL muda, para os campos mostrarem a busca atual. */}
+          <FormularioDeBusca key={linkDaPagina(filtros, 1)} filtros={filtros} />
+        </div>
       </div>
 
-      {resultado.total === 0 ? (
-        <p className="border-t border-linha py-8 text-lg">
-          Nenhuma licitação aberta com essa busca. Tente outra palavra ou tire um dos filtros.
-        </p>
-      ) : (
-        <ol>
-          {resultado.contratacoes.map((contratacao) => (
-            <ItemDeLicitacao
-              key={contratacao.numero_controle_pncp}
-              contratacao={contratacao}
-              agora={agora}
-            />
-          ))}
-        </ol>
-      )}
+      <div
+        className={`${LARGURA} grid grid-cols-[minmax(0,1fr)] gap-10 py-8 sm:py-10 lg:grid-cols-[18rem_minmax(0,1fr)] lg:items-start`}
+      >
+        <aside className="grid gap-8 lg:sticky lg:top-6" aria-label="Filtros e calendário">
+          <Seletores key={linkDaPagina(filtros, 1)} filtros={filtros} opcoes={opcoes} />
+          <Calendario filtros={filtros} mes={montarMes(mes, contagens, hoje, filtros.aPartir)} />
+        </aside>
 
-      <Paginacao
-        filtros={filtros}
-        pagina={resultado.pagina}
-        totalDePaginas={resultado.totalDePaginas}
-      />
+        <main className="min-w-0">
+          <ResumoDosFiltros filtros={filtros} opcoes={opcoes} total={resultado.total} />
+
+          {resultado.total === 0 ? (
+            <div className="grid gap-4 py-10">
+              <p className="text-2xl font-bold">Nenhuma licitação aberta com essa busca.</p>
+              <p className="text-lg text-apagado">
+                Tente outra palavra, escolha uma data mais cedo no calendário ou tire um filtro.
+              </p>
+              <Exemplos sobreFundoClaro />
+            </div>
+          ) : (
+            <ol>
+              {resultado.contratacoes.map((contratacao) => (
+                <ItemDeLicitacao
+                  key={contratacao.numero_controle_pncp}
+                  contratacao={contratacao}
+                  agora={agora}
+                />
+              ))}
+            </ol>
+          )}
+
+          <Paginacao
+            filtros={filtros}
+            pagina={resultado.pagina}
+            totalDePaginas={resultado.totalDePaginas}
+          />
+        </main>
+      </div>
     </>
   );
 }
 
-async function UltimaColeta() {
-  // Dado do banco a cada visita: sem connection(), o Next tentaria lê-lo no build.
+/** "2.672 licitações abertas agora · atualizado em 24/11 às 06:07". */
+async function NumerosVivos() {
+  // Dados do banco a cada visita: sem connection(), o Next tentaria lê-los no build.
   await connection();
-  const terminadaEm = await ultimaColeta();
-  if (!terminadaEm) return <p>Ainda não houve coleta.</p>;
-  const [data, hora] = formatarDataHora(terminadaEm).split(" ");
+  const [opcoes, terminadaEm] = await Promise.all([opcoesDeFiltro(), ultimaColeta()]);
+  const abertas = opcoes.municipios.reduce((soma, opcao) => soma + opcao.quantidade, 0);
+  const atualizado = terminadaEm ? formatarDataHora(terminadaEm).split(" ") : null;
   return (
-    <p>
-      Dados públicos do PNCP, coletados pela última vez em {data} às {hora}.
+    <p className="flex flex-wrap gap-x-4 gap-y-1">
+      <span>
+        <strong className="font-condensada text-lg text-white tabular-nums">
+          {abertas.toLocaleString("pt-BR")}
+        </strong>{" "}
+        licitações abertas agora
+      </span>
+      {atualizado && (
+        <span>
+          atualizado em {atualizado[0].slice(0, 5)} às {atualizado[1]}
+        </span>
+      )}
     </p>
   );
 }
 
 function Carregando() {
   return (
-    <p role="status" className="py-10 text-lg text-apagado">
-      Carregando licitações…
-    </p>
+    <>
+      <div className="bg-verde-profundo">
+        <div className={`${LARGURA} grid gap-5 py-10 sm:py-14`}>
+          <p className="text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
+            O que sua empresa vende?
+          </p>
+          <div className="h-16 rounded-lg bg-white/10" />
+        </div>
+      </div>
+      <p role="status" className={`${LARGURA} py-10 text-lg text-apagado`}>
+        Carregando licitações…
+      </p>
+    </>
   );
 }

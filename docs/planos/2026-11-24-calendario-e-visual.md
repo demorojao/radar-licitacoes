@@ -24,8 +24,7 @@
   lista ordenada pelo prazo, para as do dia 15 virem primeiro.
 - Dias que já passaram ficam apagados e não são clicáveis. O dia escolhido fica destacado. Setas
   ‹ › trocam o mês. "Qualquer data" limpa a escolha.
-- Tudo por link (`/?a_partir=2026-12-15&mes=2026-12`), então funciona sem JavaScript e dá para
-  mandar por mensagem.
+- Tudo por link (`/?a_partir=2026-12-15&mes=2026-12`), então dá para mandar a busca por mensagem.
 - O filtro antigo "Encerra em: até 7/30/90 dias" sai da tela.
 
 ### Cara nova
@@ -56,8 +55,9 @@ O João pediu uma tela mais forte e profissional. A direção:
   vivos ("2.672 abertas · 773 encerram nesta semana · atualizado hoje às 06:07") e a busca grande
   em branco, porque a busca é o produto.
 - **No computador, duas colunas:** à esquerda, uma barra fixa com o calendário, o município e a
-  modalidade; à direita, o resumo dos filtros e a lista. **No celular,** os filtros ficam num
-  `<details>` "Filtros e calendário", que funciona sem JavaScript.
+  modalidade; à direita, o resumo dos filtros e a lista. **No celular,** os filtros ficam acima
+  da lista, com município e modalidade lado a lado. (Decisão da implementação: um `<details>`
+  recolhido não fica aberto no computador sem duplicar os campos.)
 - **Cores (tokens):** papel `#f4f6f3`, superfície `#ffffff`, tinta `#13201a`, verde profundo
   `#0b3d2a` (faixa), verde `#0b5d3b` (ações), verde-claro `#d8efe3` (etiquetas e calendário),
   âmbar `#b54708` (semana), alerta `#b42318` (hoje e amanhã). O tema escuro tem equivalentes. O

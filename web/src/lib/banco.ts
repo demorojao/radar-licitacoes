@@ -1,6 +1,7 @@
 import "server-only";
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { cache } from "react";
 
 import {
   lerEncerramentos,
@@ -60,11 +61,12 @@ export async function encerramentosPorDia(
 }
 
 /** Municípios e modalidades com licitação aberta, para os seletores. */
-export async function opcoesDeFiltro(): Promise<OpcoesDeFiltro> {
+// cache(): o cabeçalho e os filtros pedem as opções na mesma visita; o banco é consultado uma vez.
+export const opcoesDeFiltro = cache(async (): Promise<OpcoesDeFiltro> => {
   const { data, error } = await cliente().rpc("opcoes_de_filtro");
   if (error) throw new Error(`Falha ao carregar os filtros: ${error.message}`);
   return lerOpcoes(data);
-}
+});
 
 /** Quando terminou a última coleta com sucesso (ISO 8601), ou null se nunca houve. */
 export async function ultimaColeta(): Promise<string | null> {

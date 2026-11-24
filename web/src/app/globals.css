@@ -1,28 +1,41 @@
 @import "tailwindcss";
 
-/* Radar de Licitações SC. Papel de repartição, tinta verde-escura e um vermelho reservado para
-   prazos que estão acabando. O vermelho só aparece quando significa urgência. */
+/* Radar de Licitações SC: "painel de prazos". Papel cinza-esverdeado, uma faixa de topo em verde
+   profundo e o tempo como protagonista. As cores de prazo têm significado: vermelho só para hoje e
+   amanhã, âmbar para os próximos 7 dias. */
 :root {
-  --papel: #f3f5f2;
+  --papel: #f4f6f3;
   --superficie: #ffffff;
-  --tinta: #16201b;
+  --tinta: #13201a;
   --apagado: #56625c;
-  --linha: #d2dad5;
+  --linha: #d5ddd8;
   --verde: #0b5d3b;
   --verde-forte: #08472d;
+  --verde-profundo: #0b3d2a;
+  --verde-claro: #d8efe3;
+  --verde-vivo: #5cc08e;
+  --sobre-faixa: #e8f3ec;
+  --faixa-apagado: #a9c7b6;
+  --ambar: #b54708;
   --alerta: #b42318;
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --papel: #0f1512;
-    --superficie: #161e1a;
+    --papel: #0d1411;
+    --superficie: #141d18;
     --tinta: #e3eae6;
     --apagado: #9aa8a1;
-    --linha: #2a3530;
+    --linha: #26322c;
     --verde: #5cc08e;
     --verde-forte: #7fd3a8;
+    --verde-profundo: #0a2a1e;
+    --verde-claro: #173a2a;
+    --verde-vivo: #5cc08e;
+    --sobre-faixa: #e3eae6;
+    --faixa-apagado: #8fb3a0;
+    --ambar: #fdb022;
     --alerta: #f97066;
     color-scheme: dark;
   }
@@ -36,8 +49,16 @@
   --color-linha: var(--linha);
   --color-verde: var(--verde);
   --color-verde-forte: var(--verde-forte);
+  --color-verde-profundo: var(--verde-profundo);
+  --color-verde-claro: var(--verde-claro);
+  --color-verde-vivo: var(--verde-vivo);
+  --color-sobre-faixa: var(--sobre-faixa);
+  --color-faixa-apagado: var(--faixa-apagado);
+  --color-ambar: var(--ambar);
   --color-alerta: var(--alerta);
   --font-sans: var(--font-public-sans);
+  /* Só para prazos e números: o "painel de embarque". */
+  --font-condensada: var(--font-barlow-condensed);
 }
 
 body {
