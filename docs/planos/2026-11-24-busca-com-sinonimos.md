@@ -1,6 +1,6 @@
 # Plano: busca com sinônimos
 
-> Status: ✅ aprovado pelo João em 24/11/2026 (branch `sinonimos`)
+> Status: ✅ aprovado pelo João e implementado em 24/11/2026 (branch `sinonimos`)
 
 ## Por que
 
