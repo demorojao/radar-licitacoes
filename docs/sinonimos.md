@@ -16,6 +16,12 @@ liga as duas: quem busca "remédio" também encontra "medicamento", e a licitaç
   só entra pelo sinônimo se o **objeto** tiver uma palavra que **começa** com o equivalente: "resíduo"
   pega "resíduos", e "evento" pega "eventos", mas não "eventual". Se o feminino importa, ele entra
   como outra palavra ("odontológico", "odontológica").
+- **Termo a termo.** Numa busca com dois termos ("remédio carro"), cada termo só vale pelo
+  sinônimo que está escrito no objeto. "Consultas médicas em veículo" não entra: "veículo" está
+  escrito, mas "remédio" só bateria pelo radical de "médicas". O mesmo vale para a exclusão:
+  "exame -remédio" não tira "exames médicos".
+- **O termo vale pelo radical.** "papelaria" vira `papel`, então quem digita "papel" também recebe
+  as licitações de material de expediente. Aqui isso ajuda, mas é bom saber ao acrescentar um par.
 - **Sem encadear.** Uma palavra não é termo numa linha e equivalente em outra.
 - **Critério de aceite.** Um par só entra se acrescenta licitações e se uma amostra dos trechos onde
   o equivalente aparece não traz nada errado. Um sinônimo que traz resultado errado é pior que

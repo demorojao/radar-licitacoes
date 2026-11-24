@@ -32,7 +32,7 @@ flowchart LR
 | Parte | O que faz | Status |
 |---|---|---|
 | Coletor (`coletor/`) | busca as licitações abertas de SC no PNCP, valida e grava no banco | 🚧 coleta diária em produção desde 22/11/2026; itens e arquivos 📋 |
-| Banco (`supabase/`) | guarda licitações, itens, arquivos, análises e o log das coletas | 🚧 tabelas `contratacoes`, `coletas` e `sinonimos` com RLS, testadas no CI e aplicadas no Supabase em 22/11/2026 |
+| Banco (`supabase/`) | guarda licitações, itens, arquivos, análises e o log das coletas | 🚧 tabelas com RLS, testadas no CI e aplicadas no Supabase: `contratacoes` e `coletas` em 22/11/2026, `sinonimos` em 24/11/2026 |
 | Site (`web/`) | busca, filtros, página do edital e análise com IA | 🚧 lista com filtros e busca por palavras e por sinônimos prontas; página do edital e análise com IA 📋 |
 | CI (`.github/workflows/ci.yml`) | lint, formatação, tipos, testes e build a cada push | ✅ |
 
@@ -93,7 +93,8 @@ abertas de SC sem rejeitar nenhuma.
    medicamento, fármaco), e a função reescreve a consulta com `ts_rewrite`, trocando cada termo por
    "termo OU equivalentes" sem perder aspas, `-palavra` e `or`. Quem entra só pelo sinônimo
    precisa ter a palavra escrita no objeto, e não só o mesmo radical ("medicamento" e "médico"
-   viram ambos `medic`). A coluna `sinonimos_usados` diz por qual sinônimo cada licitação entrou, e
+   viram ambos `medic`). A conferência vale termo a termo (`consulta_com_sinonimos_escritos`):
+   em "remédio carro", cada um dos dois precisa do próprio sinônimo escrito. A coluna `sinonimos_usados` diz por qual sinônimo cada licitação entrou, e
    o site mostra a etiqueta "Encontrada pelo sinônimo medicamento". A lista tem 29 pares, medidos
    nos dados reais ([docs/sinonimos.md](sinonimos.md), [ADR 0009](decisoes/0009-sinonimos-em-vez-de-embeddings.md)).
 3. 📋 Filtros futuros: valor e exclusividade para micro e pequenas empresas.

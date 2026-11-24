@@ -59,6 +59,20 @@ def test_sinonimo_so_no_orgao_nao_entra(conexao: Conexao) -> None:
     assert buscar(conexao, p_texto="computador") == []
 
 
+def test_cada_termo_precisa_da_propria_palavra(conexao: Conexao) -> None:
+    # "veículo" está escrito, mas "remédio" só bate pelo radical de "médicas": não entra.
+    nova(conexao, 1, objeto="Transporte de pacientes para consultas médicas em veículo")
+
+    assert buscar(conexao, p_texto="remédio carro") == []
+
+
+def test_exclusao_nao_tira_por_radical_parecido(conexao: Conexao) -> None:
+    # "médicos" tem o radical de "medicamento", mas não é remédio: continua na lista.
+    chave = nova(conexao, 1, objeto="Exames médicos ocupacionais")
+
+    assert chaves(buscar(conexao, p_texto="exame -remédio")) == [chave]
+
+
 def test_exclusao_vale_para_os_sinonimos(conexao: Conexao) -> None:
     nova(conexao, 1, objeto="Pneus para veículo")
     maquinas = nova(conexao, 2, objeto="Pneus para máquinas")
@@ -114,7 +128,16 @@ def test_sem_texto_a_etiqueta_vem_vazia(conexao: Conexao) -> None:
 
 @pytest.mark.parametrize(
     ("termo", "equivalentes"),
-    [("de", ["remedio"]), ("duas palavras", ["x"]), ("", ["x"]), ("pneu", []), ("pneu", ["a b"])],
+    [
+        ("de", ["remedio"]),
+        ("duas palavras", ["x"]),
+        ("", ["x"]),
+        ("pneu", []),
+        ("pneu", ["a b"]),
+        ("pneu", ["a|b"]),
+        ("pneu", ["de"]),
+        ("pneu", ["roda", None]),
+    ],
 )
 def test_tabela_recusa_linha_invalida(
     conexao: Conexao, termo: str, equivalentes: list[str]

@@ -147,6 +147,10 @@ def test_opcoes_de_filtro_contam_so_abertas(conexao: Conexao) -> None:
         ("Aquisição de pneus para a frota", "pneu"),
         ("Execução de obras de drenagem", "obra"),
         ("Compra de um pneu", "pneus"),
+        ("Aquisição de computadores", "computador"),
+        ("Compra de computador", "computadores"),
+        ("Materiais escolares", "escolar"),
+        ("Materiais médico-hospitalares", "hospitalar"),
     ],
 )
 def test_plural_e_singular_com_acento_se_encontram(
