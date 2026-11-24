@@ -109,7 +109,11 @@ abertas de SC sem rejeitar nenhuma.
    contagem do mês: medidas em produção em 24/11/2026, levaram de 17 a 22 ms cada (com e sem
    sinônimos). Limitação conhecida: a
    lista chega por streaming e precisa de JavaScript para aparecer; sem ele, a página avisa.
-4. 📋 Filtros futuros: valor e exclusividade para micro e pequenas empresas.
+4. ✅ **Data de publicação e ordenação.** `buscar_contratacoes` devolve `data_publicacao` e aceita
+   `p_ordem` ('prazo', 'relevancia', 'recentes' ou 'antigas'; outra coisa vira o padrão). Sem data
+   de publicação, a licitação vai para o fim nas ordens por publicação. O site mostra "Publicada em
+   25/11/2025" no cartão e o seletor "Ordenar por" na barra lateral.
+5. 📋 Filtros futuros: valor e exclusividade para micro e pequenas empresas.
 
 ### 3. Análise do edital com IA 📋
 
