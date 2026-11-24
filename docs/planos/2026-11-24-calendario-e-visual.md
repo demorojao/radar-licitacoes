@@ -45,6 +45,26 @@
 - **Imagem de prévia do link** (Open Graph) com o nome e a frase do Radar, para o link ficar
   bonito no WhatsApp e no LinkedIn.
 
+## Direção visual: "painel de prazos"
+
+O João pediu uma tela mais forte e profissional. A direção:
+
+- **O tempo é o protagonista.** O prazo de cada cartão e os números do calendário usam uma fonte
+  condensada e forte (Barlow Condensed 700), como um painel de embarque. É o único elemento ousado;
+  o resto fica sóbrio. O texto continua em Public Sans, desenhada para serviços públicos.
+- **Faixa de topo em verde profundo, de ponta a ponta,** com a marca de radar, o nome, os números
+  vivos ("2.672 abertas · 773 encerram nesta semana · atualizado hoje às 06:07") e a busca grande
+  em branco, porque a busca é o produto.
+- **No computador, duas colunas:** à esquerda, uma barra fixa com o calendário, o município e a
+  modalidade; à direita, o resumo dos filtros e a lista. **No celular,** os filtros ficam num
+  `<details>` "Filtros e calendário", que funciona sem JavaScript.
+- **Cores (tokens):** papel `#f4f6f3`, superfície `#ffffff`, tinta `#13201a`, verde profundo
+  `#0b3d2a` (faixa), verde `#0b5d3b` (ações), verde-claro `#d8efe3` (etiquetas e calendário),
+  âmbar `#b54708` (semana), alerta `#b42318` (hoje e amanhã). O tema escuro tem equivalentes. O
+  calendário usa tons de verde: mais escuro, mais licitações encerram no dia.
+- **Evitar:** cartões em caixas com sombra, rótulos em maiúsculas espaçadas, fonte monoespaçada e
+  degradês.
+
 ## Fora do escopo
 
 - Intervalo de datas ("de 10 a 20"). "A partir de" responde à pergunta de quem vende; um
