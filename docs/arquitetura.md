@@ -116,7 +116,7 @@ Postgres 17 descartável ([ADR 0007](decisoes/0007-postgres-comum-nos-testes-de-
 
 | Tabela | Chave | Conteúdo | Status |
 |---|---|---|---|
-| `contratacoes` | `numero_controle_pncp` | órgão, município, modalidade, situação, objeto, valores (`numeric(18,2)`), datas (`timestamptz`), link de origem, resposta original da API (`payload jsonb`), primeira e última coleta | ✅ migration |
+| `contratacoes` | `numero_controle_pncp` | órgão, município, modalidade, situação, objeto, valores (`numeric(18,2)`), datas (`timestamptz`), link de origem, resposta original da API (`payload jsonb`), primeira e última coleta; colunas geradas pelo banco para a busca (`busca`, `objeto_normalizado`) | ✅ migration |
 | `coletas` | `id` | início, fim, status, páginas, novas, atualizadas, registros inválidos (`jsonb`) e erro de cada execução | ✅ migration |
 | `sinonimos` | `termo` | palavras do edital equivalentes ao termo digitado (`text[]`); a view `sinonimos_consulta` monta as consultas do `ts_rewrite` | ✅ migration |
 | `itens` | `(numero_controle_pncp, numero_item)` | descrição, quantidade, unidade, valores e benefício para ME/EPP | 📋 |
