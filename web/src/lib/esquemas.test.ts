@@ -18,6 +18,7 @@ const LINHA = {
   total: 25,
   pagina: 2,
   sinonimos_usados: [],
+  data_publicacao: "2025-11-25T15:02:00+00:00",
 };
 
 describe("lerResultadoBusca", () => {
@@ -30,6 +31,15 @@ describe("lerResultadoBusca", () => {
     expect(resultado.contratacoes).toHaveLength(1);
     expect(resultado.contratacoes[0]).not.toHaveProperty("total");
     expect(resultado.contratacoes[0].objeto).toBe("Aquisição de material de limpeza");
+  });
+
+  it("mantém a data de publicação, que pode faltar", () => {
+    expect(lerResultadoBusca([LINHA]).contratacoes[0].data_publicacao).toBe(
+      "2025-11-25T15:02:00+00:00",
+    );
+    expect(
+      lerResultadoBusca([{ ...LINHA, data_publicacao: null }]).contratacoes[0].data_publicacao,
+    ).toBeNull();
   });
 
   it("aceita valor ausente", () => {

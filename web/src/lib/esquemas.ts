@@ -14,6 +14,8 @@ const contratacao = z.object({
   // Texto, para o dinheiro não passar por float.
   valor_total_estimado: z.string().nullable(),
   data_encerramento_proposta: z.string(),
+  // Quando o órgão publicou no PNCP. Pode faltar.
+  data_publicacao: z.string().nullable(),
   cnpj_orgao: z.string(),
   ano_compra: z.number().int(),
   sequencial_compra: z.number().int(),

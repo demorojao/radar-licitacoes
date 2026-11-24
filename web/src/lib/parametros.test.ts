@@ -54,6 +54,13 @@ describe("lerFiltros", () => {
     }
   });
 
+  it("aceita só as quatro ordens", () => {
+    for (const ordem of ["prazo", "relevancia", "recentes", "antigas"]) {
+      expect(lerFiltros({ ordem }).ordem).toBe(ordem);
+    }
+    expect(lerFiltros({ ordem: "aleatoria" }).ordem).toBeUndefined();
+  });
+
   it("o filtro antigo de prazo não existe mais", () => {
     expect(lerFiltros({ prazo: "7" })).toEqual({ pagina: 1 });
   });
@@ -89,6 +96,14 @@ describe("linkDaPagina", () => {
   it("mantém a data e o mês do calendário", () => {
     expect(linkDaPagina({ q: "x", aPartir: "2026-12-15", mes: "2026-12", pagina: 1 }, 2)).toBe(
       "/?q=x&a_partir=2026-12-15&mes=2026-12&pagina=2",
+    );
+  });
+});
+
+describe("linkDaPagina com ordem", () => {
+  it("mantém a ordem escolhida", () => {
+    expect(linkDaPagina({ q: "pneu", ordem: "recentes", pagina: 1 }, 2)).toBe(
+      "/?q=pneu&ordem=recentes&pagina=2",
     );
   });
 });

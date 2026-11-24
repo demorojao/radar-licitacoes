@@ -34,6 +34,7 @@ que usamos de teste tem 36 páginas. O Radar quer responder duas perguntas de um
 | Site: lista das licitações abertas com filtros por município e modalidade, que se aplicam ao escolher | ✅ pronto |
 | Site: calendário "encerra a partir de", com quantas licitações encerram em cada dia (em 24/11/2026, "a partir de 15/12" mostrava 1.178; [ADR 0010](docs/decisoes/0010-calendario-a-partir-de.md)) | ✅ pronto |
 | Site: cartões com faixa de urgência (hoje e amanhã em vermelho, a semana em âmbar) e imagem de prévia do link | ✅ pronto |
+| Site: data de publicação em cada licitação e "Ordenar por" (prazo, relevância, publicadas recentemente ou há mais tempo; em 24/11/2026, a aberta mais antiga tinha sido publicada em 21/06/2023) | ✅ pronto |
 | Site: busca "O que sua empresa vende?" por palavras, ignorando acentos e plurais | ✅ pronto |
 | Site: busca com sinônimos e etiqueta "Encontrada pelo sinônimo medicamento" (em 24/11/2026, "remédio" passou de 0 para 47 licitações abertas e "carro" de 4 para 132; [lista medida](docs/sinonimos.md)) | ✅ pronto |
 | Site: análise do edital com IA, com citação da página | 📋 planejado |

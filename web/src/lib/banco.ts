@@ -40,6 +40,7 @@ export async function buscarContratacoes(filtros: Filtros): Promise<ResultadoBus
     p_modalidade_id: filtros.modalidade ?? null,
     p_pagina: filtros.pagina,
     p_encerra_a_partir: filtros.aPartir ?? null,
+    p_ordem: filtros.ordem ?? null,
   });
   if (error) throw new Error(`Falha na busca: ${error.message}`);
   return lerResultadoBusca(data);

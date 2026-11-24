@@ -1,5 +1,9 @@
 import { z } from "zod";
 
+/** Ordens da lista. Sem escolha, o banco usa o padrão (relevância com texto, prazo sem texto). */
+export const ORDENS = ["prazo", "relevancia", "recentes", "antigas"] as const;
+export type Ordem = (typeof ORDENS)[number];
+
 /** Filtros da tela, lidos da URL (`/?q=limpeza&municipio=4209102&a_partir=2026-12-15`). */
 export type Filtros = {
   q?: string;
@@ -9,6 +13,7 @@ export type Filtros = {
   aPartir?: string;
   /** "AAAA-MM": o mês que o calendário mostra. */
   mes?: string;
+  ordem?: Ordem;
   pagina: number;
 };
 
@@ -48,6 +53,7 @@ function esquema(hoje: string) {
       .preprocess(primeiro, z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/))
       .optional()
       .catch(undefined),
+    ordem: z.preprocess(primeiro, z.enum(ORDENS)).optional().catch(undefined),
     pagina: z.preprocess(primeiro, z.string().regex(/^[1-9]\d{0,4}$/).transform(Number)).catch(1),
   });
 }
@@ -71,6 +77,7 @@ function endereco(filtros: Filtros, pagina: number): string {
   if (filtros.modalidade !== undefined) parametros.set("modalidade", String(filtros.modalidade));
   if (filtros.aPartir) parametros.set("a_partir", filtros.aPartir);
   if (filtros.mes) parametros.set("mes", filtros.mes);
+  if (filtros.ordem) parametros.set("ordem", filtros.ordem);
   if (pagina > 1) parametros.set("pagina", String(pagina));
   const texto = parametros.toString();
   return texto ? `/?${texto}` : "/";

@@ -75,6 +75,14 @@ export function ItemDeLicitacao({
         <p className="text-sm text-apagado">
           {contratacao.orgao_razao_social}, {contratacao.municipio_nome}
         </p>
+        {contratacao.data_publicacao && (
+          <p className="text-sm text-apagado">
+            Publicada em{" "}
+            <time dateTime={contratacao.data_publicacao}>
+              {formatarData(contratacao.data_publicacao)}
+            </time>
+          </p>
+        )}
       </div>
 
       <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 sm:col-start-2 lg:col-start-3 lg:grid lg:content-start lg:justify-items-end lg:gap-2 lg:text-right">
