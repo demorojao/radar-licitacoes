@@ -101,8 +101,11 @@ abertas de SC sem rejeitar nenhuma.
    município, modalidade, só as abertas) fica na função interna `contratacoes_que_batem`.
    `buscar_contratacoes` ganha `p_encerra_a_partir` (00:00 do dia em Brasília; com data, a lista é
    ordenada pelo prazo), e `encerramentos_por_dia` conta quantas encerram em cada dia do mês, com
-   os mesmos filtros. O site mostra o mês e cada dia é um link
-   ([ADR 0010](decisoes/0010-calendario-a-partir-de.md)).
+   os mesmos filtros. O site mostra o mês com um mapa de calor, e cada dia é um link
+   ([ADR 0010](decisoes/0010-calendario-a-partir-de.md)). A grade do mês é uma função pura
+   testada (`web/src/lib/calendario.ts`), e o "hoje" é sempre o de Brasília. Município e
+   modalidade se aplicam ao escolher (`SeletorQueEnvia`, o único Client Component da busca), e a
+   prévia do link é gerada no build (`web/src/app/opengraph-image.tsx`).
 4. 📋 Filtros futuros: valor e exclusividade para micro e pequenas empresas.
 
 ### 3. Análise do edital com IA 📋

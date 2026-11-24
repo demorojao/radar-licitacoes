@@ -31,7 +31,9 @@ que usamos de teste tem 36 páginas. O Radar quer responder duas perguntas de um
 | Coletor: coleta diária agendada no GitHub Actions (primeira coleta em 22/11/2026: 2.805 contratações, nenhuma rejeitada) | ✅ pronto |
 | Banco: tabelas de contratações e de coletas, com RLS (público só lê), testadas no CI | ✅ pronto |
 | Banco: aplicado no Supabase de produção | ✅ pronto |
-| Site: lista das licitações abertas com filtros por município, modalidade e prazo | ✅ pronto |
+| Site: lista das licitações abertas com filtros por município e modalidade, que se aplicam ao escolher | ✅ pronto |
+| Site: calendário "encerra a partir de", com quantas licitações encerram em cada dia (em 24/11/2026, "a partir de 15/12" mostrava 1.178; [ADR 0010](docs/decisoes/0010-calendario-a-partir-de.md)) | ✅ pronto |
+| Site: cartões com faixa de urgência (hoje e amanhã em vermelho, a semana em âmbar) e imagem de prévia do link | ✅ pronto |
 | Site: busca "O que sua empresa vende?" por palavras, ignorando acentos e plurais | ✅ pronto |
 | Site: busca com sinônimos e etiqueta "Encontrada pelo sinônimo medicamento" (em 24/11/2026, "remédio" passou de 0 para 47 licitações abertas e "carro" de 4 para 132; [lista medida](docs/sinonimos.md)) | ✅ pronto |
 | Site: análise do edital com IA, com citação da página | 📋 planejado |
