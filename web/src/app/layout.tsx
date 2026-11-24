@@ -15,9 +15,20 @@ const barlowCondensed = Barlow_Condensed({
   weight: ["600", "700"],
 });
 
+const DESCRICAO =
+  "Licitações abertas em Santa Catarina, atualizadas todo dia, com uma busca que entende a palavra do dia a dia.";
+
 export const metadata: Metadata = {
+  // Base dos endereços absolutos da prévia do link (Open Graph).
+  metadataBase: new URL("https://radar-licitacoes-sc.vercel.app"),
   title: "Radar de Licitações SC",
-  description: "Licitações abertas em Santa Catarina, atualizadas todo dia.",
+  description: DESCRICAO,
+  openGraph: {
+    title: "Radar de Licitações SC",
+    description: DESCRICAO,
+    locale: "pt_BR",
+    type: "website",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
