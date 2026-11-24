@@ -1,6 +1,6 @@
 # Plano: data de publicação e ordenação
 
-> Status: ✅ aprovado pelo João em 24/11/2026 (branch `publicacao`)
+> Status: ✅ aprovado pelo João e implementado em 24/11/2026 (branch `publicacao`)
 
 ## Por que
 
