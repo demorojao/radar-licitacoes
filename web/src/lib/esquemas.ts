@@ -17,6 +17,8 @@ const contratacao = z.object({
   cnpj_orgao: z.string(),
   ano_compra: z.number().int(),
   sequencial_compra: z.number().int(),
+  // Por quais sinônimos a licitação entrou na busca; vazio quando tem a palavra digitada.
+  sinonimos_usados: z.array(z.string()),
 });
 
 const linhaDaBusca = contratacao.extend({

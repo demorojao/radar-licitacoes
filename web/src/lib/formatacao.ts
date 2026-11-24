@@ -68,3 +68,12 @@ export function linkPncp(contratacao: {
   const { cnpj_orgao, ano_compra, sequencial_compra } = contratacao;
   return `https://pncp.gov.br/app/editais/${cnpj_orgao}/${ano_compra}/${sequencial_compra}`;
 }
+
+const lista = new Intl.ListFormat("pt-BR", { style: "long", type: "conjunction" });
+
+/** Explica por que a licitação apareceu, quando ela entrou só por sinônimo. */
+export function etiquetaDeSinonimos(sinonimos: string[]): string | null {
+  if (sinonimos.length === 0) return null;
+  const rotulo = sinonimos.length === 1 ? "pelo sinônimo" : "pelos sinônimos";
+  return `Encontrada ${rotulo} ${lista.format(sinonimos)}`;
+}

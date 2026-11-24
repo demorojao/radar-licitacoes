@@ -17,6 +17,7 @@ const LINHA = {
   sequencial_compra: 1,
   total: 25,
   pagina: 2,
+  sinonimos_usados: [],
 };
 
 describe("lerResultadoBusca", () => {
@@ -44,6 +45,16 @@ describe("lerResultadoBusca", () => {
       pagina: 1,
       totalDePaginas: 0,
     });
+  });
+
+  it("mantém os sinônimos usados de cada licitação", () => {
+    const resultado = lerResultadoBusca([{ ...LINHA, sinonimos_usados: ["medicamento"] }]);
+
+    expect(resultado.contratacoes[0].sinonimos_usados).toEqual(["medicamento"]);
+  });
+
+  it("recusa sinônimos fora de uma lista de textos", () => {
+    expect(() => lerResultadoBusca([{ ...LINHA, sinonimos_usados: "medicamento" }])).toThrow();
   });
 
   it("recusa uma resposta em formato inesperado", () => {

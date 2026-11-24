@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  etiquetaDeSinonimos,
   formatarData,
   formatarDataHora,
   formatarValor,
@@ -67,5 +68,22 @@ describe("linkPncp", () => {
     expect(
       linkPncp({ cnpj_orgao: "11433441000101", ano_compra: 2023, sequencial_compra: 1 }),
     ).toBe("https://pncp.gov.br/app/editais/11433441000101/2023/1");
+  });
+});
+
+describe("etiquetaDeSinonimos", () => {
+  it("sem sinônimo, não há etiqueta", () => {
+    expect(etiquetaDeSinonimos([])).toBeNull();
+  });
+
+  it("um sinônimo, no singular", () => {
+    expect(etiquetaDeSinonimos(["medicamento"])).toBe("Encontrada pelo sinônimo medicamento");
+  });
+
+  it("dois ou mais, no plural e com vírgula e \"e\"", () => {
+    expect(etiquetaDeSinonimos(["veículo", "automóvel"])).toBe(
+      "Encontrada pelos sinônimos veículo e automóvel",
+    );
+    expect(etiquetaDeSinonimos(["a", "b", "c"])).toBe("Encontrada pelos sinônimos a, b e c");
   });
 });

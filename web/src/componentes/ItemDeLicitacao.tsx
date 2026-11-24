@@ -1,5 +1,6 @@
 import type { Contratacao } from "@/lib/esquemas";
 import {
+  etiquetaDeSinonimos,
   formatarData,
   formatarDataHora,
   formatarValor,
@@ -23,6 +24,7 @@ export function ItemDeLicitacao({
   const prazo = prazoRelativo(encerramento, agora);
   const urgente = prazo === "encerra hoje" || prazo === "encerra amanhã";
   const valor = formatarValor(contratacao.valor_total_estimado);
+  const etiqueta = etiquetaDeSinonimos(contratacao.sinonimos_usados);
 
   return (
     <li className="grid gap-3 border-t border-linha py-6 sm:grid-cols-[9.5rem_minmax(0,1fr)] sm:gap-6">
@@ -52,6 +54,12 @@ export function ItemDeLicitacao({
             ": o órgão aceita fornecedores continuamente"}
         </p>
         <h2 className="line-clamp-3 text-lg leading-snug font-semibold">{contratacao.objeto}</h2>
+        {/* Fica logo abaixo do objeto: explica por que um texto sem a palavra buscada apareceu. */}
+        {etiqueta && (
+          <p className="w-fit rounded-full bg-verde/10 px-2.5 py-0.5 text-sm font-semibold text-verde">
+            {etiqueta}
+          </p>
+        )}
         <p className="text-sm text-apagado">
           {contratacao.orgao_razao_social}, {contratacao.municipio_nome}
         </p>
