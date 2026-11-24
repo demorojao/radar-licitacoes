@@ -102,7 +102,7 @@ def test_encerramentos_por_dia_respeita_texto_sinonimo_e_municipio(conexao: Cone
     ]
 
 
-def test_encerramentos_por_dia_ignora_encerradas_e_outros_meses(conexao: Conexao) -> None:
+def test_encerramentos_por_dia_ignora_revogadas_e_outros_meses(conexao: Conexao) -> None:
     em(conexao, 1, as_(15, 9))
     em(conexao, 2, as_(15, 9), situacao_id=2, situacao_nome="Revogada")
     em(conexao, 3, datetime(ANO + 1, 1, 2, 9, tzinfo=BRASILIA))

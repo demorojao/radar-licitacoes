@@ -91,9 +91,13 @@ O João pediu uma tela mais forte e profissional. A direção:
 
 - `lerFiltros` lê `a_partir` (`AAAA-MM-DD`, uma data válida) e `mes` (`AAAA-MM`). Data inválida
   ou que já passou é ignorada. `prazo` deixa de existir.
-- O calendário é um Server Component: uma grade de 7 colunas, links e nenhum JavaScript.
-- Os seletores que se aplicam sozinhos ficam num pequeno Client Component que envia o formulário
-  ao mudar. Sem JavaScript, o botão "Buscar" continua funcionando.
+- O calendário é um Server Component: uma grade de 7 colunas e links, sem código no navegador.
+- Os seletores que se aplicam sozinhos ficam num pequeno Client Component. Com mouse ou toque,
+  aplicam ao escolher; pelo teclado, com Enter ou ao sair do campo, para as setas não recarregarem
+  a página a cada toque.
+- **Limitação conhecida:** a lista chega por streaming (Partial Prerender), e um pequeno script a
+  coloca na página. Sem JavaScript, a página avisa que precisa dele, em vez de ficar em
+  "Carregando…". Isso já era assim desde a primeira tela; mudar exigiria tirar o streaming.
 - O visual segue os tokens que já existem: verde, papel, tinta e alerta, mais um âmbar novo para
   a semana. Tudo é conferido no tema claro e no escuro, no celular (500 px) e no computador.
 

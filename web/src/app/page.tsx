@@ -15,7 +15,7 @@ import {
   opcoesDeFiltro,
   ultimaColeta,
 } from "@/lib/banco";
-import { montarMes } from "@/lib/calendario";
+import { mesDoCalendario, montarMes } from "@/lib/calendario";
 import { formatarDataHora, hojeEmBrasilia } from "@/lib/formatacao";
 import { lerFiltros, linkDaPagina } from "@/lib/parametros";
 
@@ -34,6 +34,14 @@ export default function Pagina({ searchParams }: PageProps<"/">) {
           </Suspense>
         }
       />
+      {/* A lista chega por streaming e um pequeno script a coloca na página: sem JavaScript, ela
+          não aparece. Melhor dizer isso do que deixar "Carregando…" para sempre. */}
+      <noscript>
+        <p className={`${LARGURA} py-6 text-lg font-semibold`}>
+          O Radar precisa de JavaScript para mostrar as licitações. Ative o JavaScript do navegador e
+          recarregue a página.
+        </p>
+      </noscript>
       <Suspense fallback={<Carregando />}>
         <Conteudo searchParams={searchParams} />
       </Suspense>
@@ -62,10 +70,7 @@ async function Conteudo({ searchParams }: Pick<PageProps<"/">, "searchParams">) 
   const agora = new Date();
   const hoje = hojeEmBrasilia(agora);
   const filtros = lerFiltros(parametros, hoje);
-  // O mês do calendário: o pedido na URL, o da data escolhida ou o atual, nunca antes do atual.
-  const mes = [filtros.mes ?? filtros.aPartir?.slice(0, 7) ?? hoje.slice(0, 7), hoje.slice(0, 7)]
-    .sort()
-    .at(-1)!;
+  const mes = mesDoCalendario(filtros, hoje);
 
   const [resultado, opcoes, contagens] = await Promise.all([
     buscarContratacoes(filtros),
@@ -85,12 +90,20 @@ async function Conteudo({ searchParams }: Pick<PageProps<"/">, "searchParams">) 
       <div
         className={`${LARGURA} grid grid-cols-[minmax(0,1fr)] gap-10 py-8 sm:py-10 lg:grid-cols-[18rem_minmax(0,1fr)] lg:items-start`}
       >
-        <aside className="grid gap-8 lg:sticky lg:top-6" aria-label="Filtros e calendário">
-          <Seletores key={linkDaPagina(filtros, 1)} filtros={filtros} opcoes={opcoes} />
+        {/* Quem usa teclado não precisa passar pelos filtros e pelos 31 dias para chegar à lista. */}
+        <a
+          href="#resultados"
+          className="sr-only focus:not-sr-only focus:w-fit focus:rounded-md focus:bg-superficie focus:px-3 focus:py-2 focus:font-semibold lg:col-span-2"
+        >
+          Ir para os resultados
+        </a>
+        <aside className="grid gap-6 lg:sticky lg:top-6 lg:gap-8" aria-label="Filtros e calendário">
+          <Seletores filtros={filtros} opcoes={opcoes} />
           <Calendario filtros={filtros} mes={montarMes(mes, contagens, hoje, filtros.aPartir)} />
         </aside>
 
-        <main className="min-w-0">
+        <main id="resultados" className="min-w-0">
+          <h2 className="sr-only">Resultados</h2>
           <ResumoDosFiltros filtros={filtros} opcoes={opcoes} total={resultado.total} />
 
           {resultado.total === 0 ? (

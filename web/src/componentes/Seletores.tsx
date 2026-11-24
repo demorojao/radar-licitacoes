@@ -15,7 +15,7 @@ export function Seletores({ filtros, opcoes }: { filtros: Filtros; opcoes: Opcoe
         <SeletorQueEnvia
           form="busca"
           name="municipio"
-          defaultValue={filtros.municipio ?? ""}
+          valor={filtros.municipio ?? ""}
           className={campo}
         >
           <option value="">Todos</option>
@@ -31,7 +31,7 @@ export function Seletores({ filtros, opcoes }: { filtros: Filtros; opcoes: Opcoe
         <SeletorQueEnvia
           form="busca"
           name="modalidade"
-          defaultValue={filtros.modalidade?.toString() ?? ""}
+          valor={filtros.modalidade?.toString() ?? ""}
           className={campo}
         >
           <option value="">Todas</option>
@@ -42,16 +42,6 @@ export function Seletores({ filtros, opcoes }: { filtros: Filtros; opcoes: Opcoe
           ))}
         </SeletorQueEnvia>
       </label>
-      {/* Sem JavaScript, os seletores não se aplicam sozinhos: este botão envia o formulário. */}
-      <noscript className="col-span-2 lg:col-span-1">
-        <button
-          type="submit"
-          form="busca"
-          className="h-11 w-full rounded-md bg-verde font-semibold text-superficie"
-        >
-          Aplicar filtros
-        </button>
-      </noscript>
     </fieldset>
   );
 }

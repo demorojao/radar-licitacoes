@@ -105,7 +105,10 @@ abertas de SC sem rejeitar nenhuma.
    ([ADR 0010](decisoes/0010-calendario-a-partir-de.md)). A grade do mês é uma função pura
    testada (`web/src/lib/calendario.ts`), e o "hoje" é sempre o de Brasília. Município e
    modalidade se aplicam ao escolher (`SeletorQueEnvia`, o único Client Component da busca), e a
-   prévia do link é gerada no build (`web/src/app/opengraph-image.tsx`).
+   prévia do link é gerada no build (`web/src/app/opengraph-image.tsx`). Cada visita roda a busca e a
+   contagem do mês: medidas em produção em 24/11/2026, levaram de 17 a 22 ms cada (com e sem
+   sinônimos). Limitação conhecida: a
+   lista chega por streaming e precisa de JavaScript para aparecer; sem ele, a página avisa.
 4. 📋 Filtros futuros: valor e exclusividade para micro e pequenas empresas.
 
 ### 3. Análise do edital com IA 📋

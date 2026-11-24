@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { type Dia, montarMes } from "./calendario";
+import { type Dia, mesDoCalendario, montarMes, rotuloDoDia } from "./calendario";
 
 const HOJE = "2026-11-24";
 
@@ -64,5 +64,40 @@ describe("montarMes", () => {
 
   it("dá nome ao mês", () => {
     expect(montarMes("2026-12", new Map(), HOJE).titulo).toBe("dezembro de 2026");
+  });
+});
+
+describe("mesDoCalendario", () => {
+  it("usa o mês pedido na URL, mas nunca antes do mês atual", () => {
+    expect(mesDoCalendario({ mes: "2027-02", pagina: 1 }, HOJE)).toBe("2027-02");
+    expect(mesDoCalendario({ mes: "2026-01", pagina: 1 }, HOJE)).toBe("2026-11");
+  });
+
+  it("sem mês na URL, abre no mês da data escolhida ou no atual", () => {
+    expect(mesDoCalendario({ aPartir: "2026-12-15", pagina: 1 }, HOJE)).toBe("2026-12");
+    expect(mesDoCalendario({ pagina: 1 }, HOJE)).toBe("2026-11");
+  });
+});
+
+describe("rotuloDoDia", () => {
+  const dia = {
+    data: "2026-12-15",
+    numero: 15,
+    quantidade: 3,
+    passado: false,
+    hoje: false,
+    escolhido: false,
+  };
+
+  it("diz o dia, o mês e quantas encerram", () => {
+    expect(rotuloDoDia(dia)).toBe("15 de dezembro: 3 licitações encerram. Ver a partir deste dia.");
+    expect(rotuloDoDia({ ...dia, quantidade: 1 })).toBe(
+      "15 de dezembro: 1 licitação encerra. Ver a partir deste dia.",
+    );
+  });
+
+  it("avisa quando é hoje ou o dia escolhido", () => {
+    expect(rotuloDoDia({ ...dia, hoje: true })).toMatch(/^15 de dezembro \(hoje\):/);
+    expect(rotuloDoDia({ ...dia, escolhido: true })).toMatch(/^15 de dezembro \(escolhido\):/);
   });
 });

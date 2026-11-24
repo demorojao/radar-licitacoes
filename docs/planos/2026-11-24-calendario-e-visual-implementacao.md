@@ -49,7 +49,9 @@ pytest.
 4. **Contagem do calendário diferente da lista:** a soma das contagens a partir do dia X, no mês,
    bate com as licitações daquele mês na lista. Teste na tarefa 1.
 5. **Sem JavaScript:** o formulário continua funcionando pelo botão "Buscar", e o calendário e os
-   exemplos são links. Conferência na tarefa 3.
+   exemplos são links. Conferência na tarefa 3. *(Resultado: não se sustenta. Com Cache
+   Components, a lista chega por streaming e precisa de JavaScript para aparecer. Ficou como
+   limitação conhecida, com um aviso `<noscript>` na página.)*
 
 ---
 
@@ -226,7 +228,7 @@ lerEncerramentos(linhas: unknown): Map<string, number>
   - `/`, `/?q=remédio`, `/?a_partir=<dia futuro>` e um mês sem licitações;
   - tema claro e escuro, a 1280 px e a 500 px;
   - sem JavaScript (`--blink-settings=scriptEnabled=false`): os links e o "Buscar" funcionam
-    (risco 5).
+    (risco 5). *(Ver a nota do risco 5.)*
 - [ ] **Passo 4:** `npm test`, `lint`, `typecheck` e `build`. Commit:
   `feat: calendário de encerramento e cara nova da tela`.
 

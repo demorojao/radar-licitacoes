@@ -1,3 +1,5 @@
+import type { Filtros } from "./parametros";
+
 // A grade do calendário de encerramento: um mês de domingo a sábado. Função pura, sem relógio:
 // quem chama informa "hoje" (no horário de Brasília), para o teste não depender da data.
 
@@ -71,4 +73,24 @@ export function montarMes(
     anterior: mes <= hoje.slice(0, 7) ? null : chaveDoMes(ano, numeroDoMes - 1),
     proximo: chaveDoMes(ano, numeroDoMes + 1),
   };
+}
+
+/**
+ * O mês que o calendário mostra: o pedido na URL, o da data escolhida ou o atual, e nunca um
+ * mês antes do atual (no passado não há o que encerrar).
+ */
+export function mesDoCalendario(filtros: Filtros, hoje: string): string {
+  const pedido = filtros.mes ?? filtros.aPartir?.slice(0, 7) ?? hoje.slice(0, 7);
+  const atual = hoje.slice(0, 7);
+  return pedido < atual ? atual : pedido;
+}
+
+const diaEMes = new Intl.DateTimeFormat("pt-BR", { day: "numeric", month: "long", timeZone: "UTC" });
+
+/** O que o leitor de tela anuncia num dia do calendário: "15 de dezembro (hoje): 3 licitações…". */
+export function rotuloDoDia(dia: Dia): string {
+  const marca = dia.escolhido ? " (escolhido)" : dia.hoje ? " (hoje)" : "";
+  const quantas =
+    dia.quantidade === 1 ? "1 licitação encerra" : `${dia.quantidade} licitações encerram`;
+  return `${diaEMes.format(new Date(`${dia.data}T12:00:00Z`))}${marca}: ${quantas}. Ver a partir deste dia.`;
 }

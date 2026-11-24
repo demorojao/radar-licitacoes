@@ -18,6 +18,9 @@
   --faixa-apagado: #a9c7b6;
   --ambar: #b54708;
   --alerta: #b42318;
+  --campo: #ffffff;
+  --campo-texto: #13201a;
+  --campo-apagado: #56625c;
   color-scheme: light;
 }
 
@@ -37,6 +40,9 @@
     --faixa-apagado: #8fb3a0;
     --ambar: #fdb022;
     --alerta: #f97066;
+    --campo: #ffffff;
+    --campo-texto: #13201a;
+    --campo-apagado: #56625c;
     color-scheme: dark;
   }
 }
@@ -56,6 +62,9 @@
   --color-faixa-apagado: var(--faixa-apagado);
   --color-ambar: var(--ambar);
   --color-alerta: var(--alerta);
+  --color-campo: var(--campo);
+  --color-campo-texto: var(--campo-texto);
+  --color-campo-apagado: var(--campo-apagado);
   --font-sans: var(--font-public-sans);
   /* Só para prazos e números: o "painel de embarque". */
   --font-condensada: var(--font-barlow-condensed);
@@ -66,7 +75,11 @@ body {
   color: var(--tinta);
 }
 
-:focus-visible {
-  outline: 3px solid var(--verde);
-  outline-offset: 2px;
+/* Em @layer base: fora de camada, esta regra venceria as classes do Tailwind (que ficam em
+   @layer utilities) e o contorno verde sumiria sobre a faixa verde. */
+@layer base {
+  :focus-visible {
+    outline: 3px solid var(--verde);
+    outline-offset: 2px;
+  }
 }

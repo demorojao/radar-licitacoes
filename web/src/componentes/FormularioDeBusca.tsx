@@ -10,7 +10,7 @@ import type { Filtros } from "@/lib/parametros";
  */
 export function FormularioDeBusca({ filtros }: { filtros: Filtros }) {
   return (
-    <Form id="busca" action="/" className="grid gap-5 py-10 sm:py-14">
+    <Form id="busca" action="/" role="search" scroll={false} className="grid gap-5 py-10 sm:py-14">
       <div className="grid gap-3">
         <label
           htmlFor="q"
@@ -32,7 +32,7 @@ export function FormularioDeBusca({ filtros }: { filtros: Filtros }) {
           defaultValue={filtros.q ?? ""}
           placeholder="Ex.: material de limpeza, pneus, remédio"
           maxLength={200}
-          className="h-16 w-full rounded-lg bg-superficie px-5 text-lg text-tinta ring-1 ring-white/15 placeholder:text-apagado focus-visible:outline-verde-vivo"
+          className="h-16 w-full rounded-lg bg-campo px-5 text-lg text-campo-texto placeholder:text-campo-apagado focus-visible:outline-verde-vivo"
         />
         <button
           type="submit"

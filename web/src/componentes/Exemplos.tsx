@@ -2,7 +2,7 @@ import Link from "next/link";
 
 // Palavras do dia a dia que a busca entende por sinônimo (docs/sinonimos.md): o recrutador vê a
 // diferença no primeiro clique.
-const EXEMPLOS = ["remédio", "carro", "pneu", "festa", "computador"];
+const EXEMPLOS = ["remédio", "carro", "cachorro", "festa", "computador"];
 
 /** "Experimente: remédio, carro..." como links para a busca. */
 export function Exemplos({ sobreFundoClaro = false }: { sobreFundoClaro?: boolean }) {
