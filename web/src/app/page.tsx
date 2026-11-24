@@ -145,7 +145,7 @@ async function NumerosVivos() {
   const abertas = opcoes.municipios.reduce((soma, opcao) => soma + opcao.quantidade, 0);
   const atualizado = terminadaEm ? formatarDataHora(terminadaEm).split(" ") : null;
   return (
-    <p className="flex flex-wrap gap-x-4 gap-y-1">
+    <p className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
       <span>
         <strong className="font-condensada text-lg text-white tabular-nums">
           {abertas.toLocaleString("pt-BR")}

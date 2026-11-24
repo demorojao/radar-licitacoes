@@ -21,14 +21,18 @@ export function Marca({ className = "size-9" }: { className?: string }) {
 export function Cabecalho({ numeros }: { numeros: ReactNode }) {
   return (
     <header className="bg-verde-profundo text-sobre-faixa">
-      <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-x-6 gap-y-2 border-b border-white/10 px-4 py-4 sm:px-6">
-        <Link href="/" className="flex items-center gap-3 focus-visible:outline-verde-vivo">
-          <Marca />
-          <h1 className="text-lg font-extrabold tracking-tight text-white sm:text-xl">
-            Radar de Licitações SC
-          </h1>
-        </Link>
-        <div className="text-sm text-faixa-apagado">{numeros}</div>
+      {/* O espaçamento lateral fica por fora e a linha por dentro: assim a linha começa e termina
+          junto com o conteúdo de baixo (o logo e o botão "Buscar"). */}
+      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
+        <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-b border-white/10 py-4">
+          <Link href="/" className="flex items-center gap-3 focus-visible:outline-verde-vivo">
+            <Marca />
+            <h1 className="text-lg font-extrabold tracking-tight text-white sm:text-xl">
+              Radar de Licitações SC
+            </h1>
+          </Link>
+          <div className="text-sm text-faixa-apagado">{numeros}</div>
+        </div>
       </div>
     </header>
   );
