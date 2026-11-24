@@ -1,41 +1,14 @@
 """Testes de integração da busca do site: buscar_contratacoes e opcoes_de_filtro."""
 
-from datetime import UTC, datetime, timedelta
 from typing import Any
 
 import pytest
-from apoio import Conexao, inserir
-from psycopg.rows import dict_row
+from apoio import Conexao, buscar, chaves, nova
 
 pytestmark = pytest.mark.integracao
 
 JOINVILLE = "4209102"
 TAIO = "4217808"
-
-
-def nova(conexao: Conexao, numero: int, *, dias: float = 10, **alteracoes: Any) -> str:
-    """Insere uma contratação aberta que encerra daqui a `dias` dias e devolve a chave."""
-    chave = f"11433441000101-1-{numero:06d}/2026"
-    inserir(
-        conexao,
-        numero_controle_pncp=chave,
-        sequencial_compra=numero,
-        data_encerramento_proposta=datetime.now(UTC) + timedelta(days=dias),
-        **alteracoes,
-    )
-    return chave
-
-
-def buscar(conexao: Conexao, **parametros: Any) -> list[dict[str, Any]]:
-    argumentos = ", ".join(f"{nome} => %({nome})s" for nome in parametros)
-    with conexao.cursor(row_factory=dict_row) as cursor:
-        return cursor.execute(
-            f"select * from public.buscar_contratacoes({argumentos})", parametros
-        ).fetchall()
-
-
-def chaves(linhas: list[dict[str, Any]]) -> list[str]:
-    return [linha["numero_controle_pncp"] for linha in linhas]
 
 
 def test_busca_ignora_acento_e_plural(conexao: Conexao) -> None:

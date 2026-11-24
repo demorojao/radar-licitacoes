@@ -15,7 +15,7 @@ flowchart LR
         COL[Coletor em Python]
     end
     subgraph supabase [Supabase]
-        DB[(Postgres + pgvector)]
+        DB[(Postgres)]
     end
     subgraph vercel [Vercel]
         WEB[Site em Next.js]
@@ -23,18 +23,17 @@ flowchart LR
 
     PNCP -->|licitações abertas de SC| COL
     COL -->|upsert| DB
-    COL -->|embedding do objeto| GEM
     PESSOA --> WEB
     WEB -->|busca e filtros| DB
-    WEB -->|embedding da pergunta e análise do edital| GEM
+    WEB -->|análise do edital| GEM
     WEB -->|guarda a análise no cache| DB
 ```
 
 | Parte | O que faz | Status |
 |---|---|---|
-| Coletor (`coletor/`) | busca as licitações abertas de SC no PNCP, valida e grava no banco | 🚧 coleta diária em produção desde 22/11/2026; itens, arquivos e embeddings 📋 |
-| Banco (`supabase/`) | guarda licitações, itens, arquivos, análises e o log das coletas | 🚧 tabelas `contratacoes` e `coletas` com RLS, testadas no CI e aplicadas no Supabase em 22/11/2026 |
-| Site (`web/`) | busca, filtros, página do edital e análise com IA | 🚧 lista com filtros e busca por palavras prontas; busca por significado, página do edital e análise com IA 📋 |
+| Coletor (`coletor/`) | busca as licitações abertas de SC no PNCP, valida e grava no banco | 🚧 coleta diária em produção desde 22/11/2026; itens e arquivos 📋 |
+| Banco (`supabase/`) | guarda licitações, itens, arquivos, análises e o log das coletas | 🚧 tabelas `contratacoes`, `coletas` e `sinonimos` com RLS, testadas no CI e aplicadas no Supabase em 22/11/2026 |
+| Site (`web/`) | busca, filtros, página do edital e análise com IA | 🚧 lista com filtros e busca por palavras e por sinônimos prontas; página do edital e análise com IA 📋 |
 | CI (`.github/workflows/ci.yml`) | lint, formatação, tipos, testes e build a cada push | ✅ |
 
 As duas partes, coletor e site, só conversam pelo banco. As migrations (arquivos SQL versionados
@@ -63,8 +62,7 @@ que criam e alteram as tabelas) são o contrato entre elas. Veja o
    só. Upsert é inserir se não existe e atualizar se existe, então rodar duas vezes não duplica
    nada. O mesmo comando conta quantas eram novas e quantas foram atualizadas, e a resposta
    original da API vai para a coluna `payload` (`coletor/src/radar_coletor/banco.py`).
-5. 📋 Para cada contratação nova, o coletor busca os itens e a lista de arquivos e gera o embedding
-   do objeto com o Gemini.
+5. 📋 Para cada contratação nova, o coletor busca os itens e a lista de arquivos.
 6. ✅ O resumo da execução (início, fim, quantidades, registros inválidos e erro) vai para a
    tabela `coletas`. Uma falha também é registrada, e a coleta termina com código de erro. Uma
    coleta sem nenhuma contratação válida conta como falha, porque indica problema na fonte.
@@ -90,11 +88,15 @@ abertas de SC sem rejeitar nenhuma.
    corta o pedido que passar de 8 s. Os filtros vêm da URL, validados com Zod
    (`web/src/lib/parametros.ts`), e a página (`web/src/app/page.tsx`) entrega o título e a busca
    como HTML estático e a lista por streaming (*Partial Prerender*).
-2. 📋 O servidor do site gera o embedding do texto digitado. A chave do Gemini nunca vai para o
-   navegador.
-3. 📋 O Postgres combina a busca por significado (pgvector) com a busca por palavras. Isso se
-   chama **busca híbrida**, e só a função muda: a tela continua igual.
-4. 📋 Filtros futuros: valor e exclusividade para micro e pequenas empresas.
+2. ✅ **Sinônimos.** Quem busca usa a palavra do dia a dia e o edital usa a oficial: em
+   24/11/2026, "remédio" não achava nada. A tabela `sinonimos` liga as duas ("remédio" →
+   medicamento, fármaco), e a função reescreve a consulta com `ts_rewrite`, trocando cada termo por
+   "termo OU equivalentes" sem perder aspas, `-palavra` e `or`. Quem entra só pelo sinônimo
+   precisa ter a palavra escrita no objeto, e não só o mesmo radical ("medicamento" e "médico"
+   viram ambos `medic`). A coluna `sinonimos_usados` diz por qual sinônimo cada licitação entrou, e
+   o site mostra a etiqueta "Encontrada pelo sinônimo medicamento". A lista tem 29 pares, medidos
+   nos dados reais ([docs/sinonimos.md](sinonimos.md), [ADR 0009](decisoes/0009-sinonimos-em-vez-de-embeddings.md)).
+3. 📋 Filtros futuros: valor e exclusividade para micro e pequenas empresas.
 
 ### 3. Análise do edital com IA 📋
 
@@ -115,12 +117,12 @@ Postgres 17 descartável ([ADR 0007](decisoes/0007-postgres-comum-nos-testes-de-
 |---|---|---|---|
 | `contratacoes` | `numero_controle_pncp` | órgão, município, modalidade, situação, objeto, valores (`numeric(18,2)`), datas (`timestamptz`), link de origem, resposta original da API (`payload jsonb`), primeira e última coleta | ✅ migration |
 | `coletas` | `id` | início, fim, status, páginas, novas, atualizadas, registros inválidos (`jsonb`) e erro de cada execução | ✅ migration |
+| `sinonimos` | `termo` | palavras do edital equivalentes ao termo digitado (`text[]`); a view `sinonimos_consulta` monta as consultas do `ts_rewrite` | ✅ migration |
 | `itens` | `(numero_controle_pncp, numero_item)` | descrição, quantidade, unidade, valores e benefício para ME/EPP | 📋 |
 | `arquivos` | `(numero_controle_pncp, sequencial_documento)` | título, tipo e URL | 📋 |
 | `analises` | `numero_controle_pncp` | JSON validado da análise, modelo usado e data | 📋 |
 
-A coluna `busca` (`tsvector`, gerada pelo banco) já existe em `contratacoes`. O embedding
-(`vector`) entra no passo da busca por significado. Uma contratação que sai da lista de abertas não é apagada: só deixa de ser atualizada.
+A coluna `busca` (`tsvector`, gerada pelo banco) já existe em `contratacoes`. Uma contratação que sai da lista de abertas não é apagada: só deixa de ser atualizada.
 
 ## Segurança
 
