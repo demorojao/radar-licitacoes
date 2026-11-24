@@ -97,7 +97,13 @@ abertas de SC sem rejeitar nenhuma.
    em "remédio carro", cada um dos dois precisa do próprio sinônimo escrito. A coluna `sinonimos_usados` diz por qual sinônimo cada licitação entrou, e
    o site mostra a etiqueta "Encontrada pelo sinônimo medicamento". A lista tem 29 pares, medidos
    nos dados reais ([docs/sinonimos.md](sinonimos.md), [ADR 0009](decisoes/0009-sinonimos-em-vez-de-embeddings.md)).
-3. 📋 Filtros futuros: valor e exclusividade para micro e pequenas empresas.
+3. ✅ **Calendário "encerra a partir de".** A regra de "quais licitações batem" (texto, sinônimos,
+   município, modalidade, só as abertas) fica na função interna `contratacoes_que_batem`.
+   `buscar_contratacoes` ganha `p_encerra_a_partir` (00:00 do dia em Brasília; com data, a lista é
+   ordenada pelo prazo), e `encerramentos_por_dia` conta quantas encerram em cada dia do mês, com
+   os mesmos filtros. O site mostra o mês e cada dia é um link
+   ([ADR 0010](decisoes/0010-calendario-a-partir-de.md)).
+4. 📋 Filtros futuros: valor e exclusividade para micro e pequenas empresas.
 
 ### 3. Análise do edital com IA 📋
 

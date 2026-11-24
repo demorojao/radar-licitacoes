@@ -17,6 +17,7 @@ Um ADR não é apagado quando a decisão muda. Escreve-se um novo, que substitui
 | [0007](0007-postgres-comum-nos-testes-de-banco.md) | Postgres comum, imitando o Supabase, nos testes de banco | aceita |
 | [0008](0008-busca-numa-funcao-sql.md) | A busca do site é uma função SQL chamada com a chave pública | aceita |
 | [0009](0009-sinonimos-em-vez-de-embeddings.md) | Sinônimos no Postgres em vez de busca por significado com IA | aceita |
+| [0010](0010-calendario-a-partir-de.md) | Calendário "encerra a partir de" no lugar do filtro "até N dias" | aceita |
 
 ## Modelo
 
