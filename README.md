@@ -33,7 +33,7 @@ que usamos de teste tem 36 páginas. O Radar quer responder duas perguntas de um
 | Banco: aplicado no Supabase de produção | ✅ pronto |
 | Site: lista das licitações abertas com filtros por município, modalidade e prazo | ✅ pronto |
 | Site: busca "O que sua empresa vende?" por palavras, ignorando acentos e plurais | ✅ pronto |
-| Site: busca por significado (com IA), que encontra sinônimos | 📋 planejado |
+| Site: busca com sinônimos e etiqueta "Encontrada pelo sinônimo medicamento" (em 24/11/2026, "remédio" passou de 0 para 47 licitações abertas e "carro" de 4 para 132; [lista medida](docs/sinonimos.md)) | ✅ pronto |
 | Site: análise do edital com IA, com citação da página | 📋 planejado |
 
 ## Estrutura
