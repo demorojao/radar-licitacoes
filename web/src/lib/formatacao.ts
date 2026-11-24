@@ -52,6 +52,29 @@ export function prazoRelativo(iso: string, agora: Date): string {
   return `encerra em ${Math.floor(dias / 30)} meses`;
 }
 
+/** "AAAA-MM-DD" de hoje no horário de Brasília. */
+export function hojeEmBrasilia(agora: Date): string {
+  const p = partesEmBrasilia(agora);
+  return `${p.year}-${p.month}-${p.day}`;
+}
+
+/**
+ * Quão perto está o fim do prazo: "agora" para hoje e amanhã (quase não dá mais tempo),
+ * "semana" para os próximos 7 dias, e null depois disso.
+ */
+export function urgencia(iso: string, agora: Date): "agora" | "semana" | null {
+  const dias = diaEmBrasilia(new Date(iso)) - diaEmBrasilia(agora);
+  if (dias <= 1) return "agora";
+  if (dias <= 7) return "semana";
+  return null;
+}
+
+/** "2026-12-15" → "15/12". */
+export function formatarDiaCurto(data: string): string {
+  const [, mes, dia] = data.split("-");
+  return `${dia}/${mes}`;
+}
+
 /** Prazo a mais de 5 anos: quase sempre erro de digitação do órgão no PNCP. */
 export function prazoSuspeito(iso: string, agora: Date): boolean {
   const limite = new Date(agora);

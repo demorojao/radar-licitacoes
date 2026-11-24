@@ -2,7 +2,13 @@ import "server-only";
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-import { lerOpcoes, lerResultadoBusca, type OpcoesDeFiltro, type ResultadoBusca } from "./esquemas";
+import {
+  lerEncerramentos,
+  lerOpcoes,
+  lerResultadoBusca,
+  type OpcoesDeFiltro,
+  type ResultadoBusca,
+} from "./esquemas";
 import type { Filtros } from "./parametros";
 import { comTempoLimite } from "./tempo-limite";
 
@@ -31,11 +37,26 @@ export async function buscarContratacoes(filtros: Filtros): Promise<ResultadoBus
     p_texto: filtros.q ?? null,
     p_codigo_ibge: filtros.municipio ?? null,
     p_modalidade_id: filtros.modalidade ?? null,
-    p_prazo_dias: filtros.prazo ?? null,
     p_pagina: filtros.pagina,
+    p_encerra_a_partir: filtros.aPartir ?? null,
   });
   if (error) throw new Error(`Falha na busca: ${error.message}`);
   return lerResultadoBusca(data);
+}
+
+/** Quantas licitações (com os filtros de texto, município e modalidade) encerram em cada dia. */
+export async function encerramentosPorDia(
+  filtros: Filtros,
+  mes: string,
+): Promise<Map<string, number>> {
+  const { data, error } = await cliente().rpc("encerramentos_por_dia", {
+    p_texto: filtros.q ?? null,
+    p_codigo_ibge: filtros.municipio ?? null,
+    p_modalidade_id: filtros.modalidade ?? null,
+    p_mes: `${mes}-01`,
+  });
+  if (error) throw new Error(`Falha ao carregar o calendário: ${error.message}`);
+  return lerEncerramentos(data);
 }
 
 /** Municípios e modalidades com licitação aberta, para os seletores. */

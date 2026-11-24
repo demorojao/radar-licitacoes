@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import { lerFiltros, linkDaPagina } from "./parametros";
+import { lerFiltros as lerFiltrosEm, linkCom, linkDaPagina } from "./parametros";
+
+// "Hoje" fixo, para os testes não dependerem do relógio.
+const HOJE = "2026-11-24";
+const lerFiltros = (parametros: Parameters<typeof lerFiltrosEm>[0]) =>
+  lerFiltrosEm(parametros, HOJE);
 
 describe("lerFiltros", () => {
   it("sem parâmetros, começa na página 1 sem filtros", () => {
@@ -31,9 +36,26 @@ describe("lerFiltros", () => {
     expect(lerFiltros({ modalidade: "abc" }).modalidade).toBeUndefined();
   });
 
-  it("aceita só os prazos 7, 30 e 90", () => {
-    expect(lerFiltros({ prazo: "30" }).prazo).toBe(30);
-    expect(lerFiltros({ prazo: "15" }).prazo).toBeUndefined();
+  it("aceita a_partir de hoje em diante, como data real", () => {
+    expect(lerFiltros({ a_partir: "2026-12-15" }).aPartir).toBe("2026-12-15");
+    expect(lerFiltros({ a_partir: HOJE }).aPartir).toBe(HOJE);
+  });
+
+  it("ignora a_partir impossível, mal escrita ou que já passou", () => {
+    for (const a_partir of ["2026-02-30", "abc", "2026-11-23", "15/12/2026"]) {
+      expect(lerFiltros({ a_partir }).aPartir).toBeUndefined();
+    }
+  });
+
+  it("aceita só mes no formato AAAA-MM", () => {
+    expect(lerFiltros({ mes: "2026-12" }).mes).toBe("2026-12");
+    for (const mes of ["2026-13", "2026-1", "dezembro"]) {
+      expect(lerFiltros({ mes }).mes).toBeUndefined();
+    }
+  });
+
+  it("o filtro antigo de prazo não existe mais", () => {
+    expect(lerFiltros({ prazo: "7" })).toEqual({ pagina: 1 });
   });
 
   it("página inválida vira 1", () => {
@@ -44,7 +66,7 @@ describe("lerFiltros", () => {
   });
 
   it("um parâmetro inválido não derruba os outros", () => {
-    expect(lerFiltros({ q: "luva", prazo: "15", pagina: "abc", modalidade: "6" })).toEqual({
+    expect(lerFiltros({ q: "luva", a_partir: "ontem", pagina: "abc", modalidade: "6" })).toEqual({
       q: "luva",
       modalidade: 6,
       pagina: 1,
@@ -61,8 +83,26 @@ describe("linkDaPagina", () => {
 
   it("não repete pagina=1 nem parâmetros vazios", () => {
     expect(linkDaPagina({ pagina: 3 }, 1)).toBe("/");
-    expect(linkDaPagina({ municipio: "4209102", prazo: 7, pagina: 1 }, 1)).toBe(
-      "/?municipio=4209102&prazo=7",
+    expect(linkDaPagina({ municipio: "4209102", pagina: 1 }, 1)).toBe("/?municipio=4209102");
+  });
+
+  it("mantém a data e o mês do calendário", () => {
+    expect(linkDaPagina({ q: "x", aPartir: "2026-12-15", mes: "2026-12", pagina: 1 }, 2)).toBe(
+      "/?q=x&a_partir=2026-12-15&mes=2026-12&pagina=2",
+    );
+  });
+});
+
+describe("linkCom", () => {
+  it("troca um filtro, mantém os outros e volta para a página 1", () => {
+    expect(linkCom({ q: "pneu", pagina: 2 }, { aPartir: "2026-12-15", mes: "2026-12" })).toBe(
+      "/?q=pneu&a_partir=2026-12-15&mes=2026-12",
+    );
+  });
+
+  it("tira o filtro que vem como undefined", () => {
+    expect(linkCom({ q: "pneu", municipio: "4209102", pagina: 3 }, { municipio: undefined })).toBe(
+      "/?q=pneu",
     );
   });
 });

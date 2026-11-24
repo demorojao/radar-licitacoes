@@ -3,12 +3,6 @@ import Form from "next/form";
 import type { OpcoesDeFiltro } from "@/lib/esquemas";
 import type { Filtros } from "@/lib/parametros";
 
-const PRAZOS = [
-  { valor: "7", rotulo: "Até 7 dias" },
-  { valor: "30", rotulo: "Até 30 dias" },
-  { valor: "90", rotulo: "Até 90 dias" },
-];
-
 const campo =
   "h-11 w-full rounded-md border border-linha bg-superficie px-3 text-base text-tinta";
 
@@ -48,7 +42,7 @@ export function FormularioDeBusca({
         </div>
       </div>
 
-      <fieldset className="grid gap-3 sm:grid-cols-3">
+      <fieldset className="grid gap-3 sm:grid-cols-2">
         <legend className="sr-only">Filtros</legend>
         <label className="grid gap-1 text-sm font-semibold">
           Município
@@ -72,17 +66,6 @@ export function FormularioDeBusca({
             {opcoes.modalidades.map((opcao) => (
               <option key={opcao.valor} value={opcao.valor}>
                 {opcao.nome} ({opcao.quantidade})
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="grid gap-1 text-sm font-semibold">
-          Encerra em
-          <select name="prazo" defaultValue={filtros.prazo?.toString() ?? ""} className={campo}>
-            <option value="">Qualquer prazo</option>
-            {PRAZOS.map((prazo) => (
-              <option key={prazo.valor} value={prazo.valor}>
-                {prazo.rotulo}
               </option>
             ))}
           </select>

@@ -33,6 +33,11 @@ const linhaDeOpcao = z.object({
   quantidade: z.number().int(),
 });
 
+const linhaDeEncerramento = z.object({
+  dia: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  quantidade: z.number().int(),
+});
+
 export type Contratacao = z.infer<typeof contratacao>;
 
 export type ResultadoBusca = {
@@ -70,4 +75,10 @@ export function lerOpcoes(linhas: unknown): OpcoesDeFiltro {
       .filter((linha) => linha.tipo === tipo)
       .map(({ valor, nome, quantidade }) => ({ valor, nome, quantidade }));
   return { municipios: opcoes("municipio"), modalidades: opcoes("modalidade") };
+}
+
+/** Valida as linhas de encerramentos_por_dia: dia ("AAAA-MM-DD") → quantidade. */
+export function lerEncerramentos(linhas: unknown): Map<string, number> {
+  const validas = z.array(linhaDeEncerramento).parse(linhas);
+  return new Map(validas.map(({ dia, quantidade }) => [dia, quantidade]));
 }

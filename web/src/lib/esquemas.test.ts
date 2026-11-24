@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { lerOpcoes, lerResultadoBusca } from "./esquemas";
+import { lerEncerramentos, lerOpcoes, lerResultadoBusca } from "./esquemas";
 
 // Uma linha como a função buscar_contratacoes devolve pela API do Supabase.
 const LINHA = {
@@ -80,5 +80,23 @@ describe("lerOpcoes", () => {
 
   it("recusa um tipo desconhecido", () => {
     expect(() => lerOpcoes([{ tipo: "estado", valor: "SC", nome: "SC", quantidade: 1 }])).toThrow();
+  });
+});
+
+describe("lerEncerramentos", () => {
+  it("monta um mapa de dia para quantidade", () => {
+    const mapa = lerEncerramentos([
+      { dia: "2026-12-15", quantidade: 2 },
+      { dia: "2026-12-16", quantidade: 1 },
+    ]);
+
+    expect(mapa.get("2026-12-15")).toBe(2);
+    expect(mapa.get("2026-12-16")).toBe(1);
+    expect(mapa.size).toBe(2);
+  });
+
+  it("recusa um formato inesperado", () => {
+    expect(() => lerEncerramentos([{ dia: 15, quantidade: 2 }])).toThrow();
+    expect(() => lerEncerramentos([{ dia: "15/12/2026", quantidade: 2 }])).toThrow();
   });
 });

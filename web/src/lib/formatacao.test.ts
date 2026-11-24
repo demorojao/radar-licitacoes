@@ -2,6 +2,9 @@ import { describe, expect, it } from "vitest";
 
 import {
   etiquetaDeSinonimos,
+  formatarDiaCurto,
+  hojeEmBrasilia,
+  urgencia,
   formatarData,
   formatarDataHora,
   formatarValor,
@@ -85,5 +88,33 @@ describe("etiquetaDeSinonimos", () => {
       "Encontrada pelos sinônimos veículo e automóvel",
     );
     expect(etiquetaDeSinonimos(["a", "b", "c"])).toBe("Encontrada pelos sinônimos a, b e c");
+  });
+});
+
+describe("hojeEmBrasilia", () => {
+  it("usa o dia de Brasília, mesmo já sendo o dia seguinte em UTC", () => {
+    expect(hojeEmBrasilia(new Date("2026-12-15T02:00:00Z"))).toBe("2026-12-14");
+    expect(hojeEmBrasilia(new Date("2026-12-15T12:00:00Z"))).toBe("2026-12-15");
+  });
+});
+
+describe("urgencia", () => {
+  const agora = new Date("2026-11-24T15:00:00Z");
+
+  it("hoje e amanhã são urgentes", () => {
+    expect(urgencia("2026-11-24T20:00:00Z", agora)).toBe("agora");
+    expect(urgencia("2026-11-25T20:00:00Z", agora)).toBe("agora");
+  });
+
+  it("até 7 dias é a semana; depois, nada", () => {
+    expect(urgencia("2026-11-27T12:00:00Z", agora)).toBe("semana");
+    expect(urgencia("2026-12-01T12:00:00Z", agora)).toBe("semana");
+    expect(urgencia("2026-12-02T12:00:00Z", agora)).toBeNull();
+  });
+});
+
+describe("formatarDiaCurto", () => {
+  it("mostra dia e mês", () => {
+    expect(formatarDiaCurto("2026-12-15")).toBe("15/12");
   });
 });

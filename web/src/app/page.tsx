@@ -6,7 +6,7 @@ import { FormularioDeBusca } from "@/componentes/FormularioDeBusca";
 import { ItemDeLicitacao } from "@/componentes/ItemDeLicitacao";
 import { Paginacao } from "@/componentes/Paginacao";
 import { buscarContratacoes, opcoesDeFiltro, ultimaColeta } from "@/lib/banco";
-import { formatarDataHora } from "@/lib/formatacao";
+import { formatarDataHora, hojeEmBrasilia } from "@/lib/formatacao";
 import { lerFiltros, linkDaPagina } from "@/lib/parametros";
 
 const REPOSITORIO = "https://github.com/demorojao/radar-licitacoes";
@@ -51,10 +51,11 @@ export default function Pagina({ searchParams }: PageProps<"/">) {
 }
 
 async function Busca({ searchParams }: Pick<PageProps<"/">, "searchParams">) {
-  const filtros = lerFiltros(await searchParams);
+  const parametros = await searchParams;
   // A hora atual muda a cada visita: connection() avisa o Next para não usá-la no pré-render.
   await connection();
   const agora = new Date();
+  const filtros = lerFiltros(parametros, hojeEmBrasilia(agora));
   const [resultado, opcoes] = await Promise.all([buscarContratacoes(filtros), opcoesDeFiltro()]);
   const temFiltro = linkDaPagina(filtros, 1) !== "/";
 
