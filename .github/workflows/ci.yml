@@ -61,7 +61,13 @@ jobs:
         run: uv run mypy
 
       - name: Testes
-        run: uv run pytest
+        # Cada teste que falha vira uma anotação (::error) no resumo do CI, legível sem abrir o log.
+        run: |
+          set -o pipefail
+          uv run pytest -rfE 2>&1 | tee pytest.log || {
+            grep -E '^(FAILED|ERROR) ' pytest.log | cut -c1-900 | sed 's/^/::error title=pytest::/'
+            exit 1
+          }
 
   web:
     name: Site (Next.js)
